@@ -71,7 +71,7 @@ override_dh_auto_install:
 
 override_dh_installman:
 	: # Very sloppy man pages for now
-	@chmod 755 $(pkgdir)/usr/bin/run-apptainer
+	@chmod 755 $(pkgdir)/usr/bin/run-singularity
 	@debian/generate_manpages $(pkgdir) $(pkgver)
 	@dh_installman
 

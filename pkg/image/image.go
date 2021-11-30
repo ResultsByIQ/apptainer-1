@@ -54,7 +54,7 @@ const (
 const (
 	// RootFs partition name
 	RootFs       = "!__rootfs__!"
-	launchString = " run-apptainer"
+	launchString = " run-singularity"
 	bufferSize   = 2048
 	emptyFd      = ^uintptr(0)
 )

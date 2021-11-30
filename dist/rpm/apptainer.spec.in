@@ -134,7 +134,7 @@ make -C builddir DESTDIR=$RPM_BUILD_ROOT install man
 %files
 %attr(4755, root, root) %{_libexecdir}/apptainer/bin/starter-suid
 %{_bindir}/apptainer
-%{_bindir}/run-apptainer
+%{_bindir}/run-singularity
 %dir %{_libexecdir}/apptainer
 %{_libexecdir}/apptainer/bin/starter
 %{_libexecdir}/apptainer/cni/*

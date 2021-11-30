@@ -48,16 +48,16 @@ $(sessiondir_INSTALL):
 INSTALLFILES += $(sessiondir_INSTALL)
 
 
-# run-apptainer script
-run_apptainer := $(SOURCEDIR)/scripts/run-apptainer
+# run-singularity script
+run_singularity := $(SOURCEDIR)/scripts/run-singularity
 
-run_apptainer_INSTALL := $(DESTDIR)$(BINDIR)/run-apptainer
-$(run_apptainer_INSTALL): $(run_apptainer)
+run_singularity_INSTALL := $(DESTDIR)$(BINDIR)/run-singularity
+$(run_singularity_INSTALL): $(run_singularity)
 	@echo " INSTALL" $@
 	$(V)umask 0022 && mkdir -p $(@D)
 	$(V)install -m 0755 $< $@
 
-INSTALLFILES += $(run_apptainer_INSTALL)
+INSTALLFILES += $(run_singularity_INSTALL)
 
 
 # capability config file
