@@ -32,7 +32,7 @@ const (
 	// LibraryProtocol holds the sylabs cloud library base URI,
 	// for more info refer to https://cloud.sylabs.io/library.
 	LibraryProtocol = "library"
-	// ShubProtocol holds apptainer hub base URI,
+	// ShubProtocol holds singularity hub base URI,
 	// for more info refer to https://apptainer-hub.org/
 	ShubProtocol = "shub"
 	// HTTPProtocol holds the remote http base URI.

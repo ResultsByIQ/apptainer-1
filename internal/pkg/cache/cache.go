@@ -44,7 +44,7 @@ const (
 	OciTempCacheType = "oci-tmp"
 	// OciBlobCacheType specifies the cache holds OCI blobs (layers) pulled from OCI sources
 	OciBlobCacheType = "blob"
-	// ShubCacheType specifies the cache holds images pulled from Apptainer Hub
+	// ShubCacheType specifies the cache holds images pulled from Singularoty Hub
 	ShubCacheType = "shub"
 	// OrasCacheType specifies the cache holds SIF images pulled from Oras sources
 	OrasCacheType = "oras"

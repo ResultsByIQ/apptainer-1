@@ -63,7 +63,7 @@ Enterprise Performance Computing (EPC)`
 
       library://  an image library (default https://cloud.sylabs.io/library)
       docker://   a Docker/OCI registry (default Docker Hub)
-      shub://     a Apptainer registry (default Apptainer Hub)
+      shub://     a Apptainer registry (default Singularity Hub)
       oras://     an OCI registry that holds SIF files using ORAS`
 
 	BuildExample string = `
@@ -79,9 +79,9 @@ Enterprise Performance Computing (EPC)`
           From: tensorflow/tensorflow:latest
           IncludeCmd: yes # Use the CMD as runscript instead of ENTRYPOINT
 
-      Apptainer Hub:
+      Singularity Hub:
           Bootstrap: shub
-          From: apptainerhub/centos
+          From: singularityhub/centos
 
       YUM/RHEL:
           Bootstrap: yum
@@ -470,7 +470,7 @@ Enterprise Performance Computing (EPC)`
   docker://*          A Docker/OCI container hosted on Docker Hub or another
                       OCI registry.
 
-  shub://*            A container hosted on Apptainer Hub.
+  shub://*            A container hosted on Singularity Hub.
 
   oras://*            A SIF container hosted on an OCI registry that supports
                       the OCI Registry As Storage (ORAS) specification.`
@@ -594,7 +594,7 @@ Enterprise Performance Computing (EPC)`
   docker: Pull a Docker/OCI image from Docker Hub, or another OCI registry.
       docker://user/image:tag
     
-  shub: Pull an image from Apptainer Hub
+  shub: Pull an image from Singularity Hub
       shub://user/image:tag
 
   oras: Pull a SIF image from an OCI registry that supports ORAS.

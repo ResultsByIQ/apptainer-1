@@ -10,7 +10,7 @@ that you can use a Docker bootstrap to create almost any of them.
 ## Contributing
 
 If you have a specific scientific (or other) container, we suggest that you
-consider [apptainer hub](https://singularity-hub.org) to serve it. If you do
+consider [singularity hub](https://singularity-hub.org) to serve it. If you do
 not intend to build or use the container, or want to provide a base template,
 then you might also want to send a pull request to add it here.
 

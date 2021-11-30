@@ -97,7 +97,7 @@ func TestSIFAssemblerShub(t *testing.T) {
 	}
 
 	// TODO(mem): reenable this; disabled while shub is down
-	t.Skip("Skipping tests that access apptainer hub")
+	t.Skip("Skipping tests that access singularity hub")
 
 	mksquashfsPath, err := exec.LookPath("mksquashfs")
 	if err != nil {
