@@ -28,8 +28,8 @@ import (
 
 const (
 	dockerURI         = "docker://alpine"
-	dockerArchiveURI  = "https://s3.amazonaws.com/apptainer-ci-public/alpine-docker-save.tar"
-	ociArchiveURI     = "https://s3.amazonaws.com/apptainer-ci-public/alpine-oci-archive.tar"
+	dockerArchiveURI  = "https://s3.amazonaws.com/singularity-ci-public/alpine-docker-save.tar"
+	ociArchiveURI     = "https://s3.amazonaws.com/singularity-ci-public/alpine-oci-archive.tar"
 	dockerDaemonImage = "alpine:latest"
 )
 
