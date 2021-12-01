@@ -317,7 +317,7 @@ func (cp *OCIConveyorPacker) insertBaseEnv() (err error) {
 }
 
 func (cp *OCIConveyorPacker) insertRunScript() (err error) {
-	f, err := os.Create(cp.b.RootfsPath + "/.apptainer.d/runscript")
+	f, err := os.Create(cp.b.RootfsPath + "/.singularity.d/runscript")
 	if err != nil {
 		return
 	}
@@ -401,7 +401,7 @@ exec "$@"
 
 	f.Sync()
 
-	err = os.Chmod(cp.b.RootfsPath+"/.apptainer.d/runscript", 0o755)
+	err = os.Chmod(cp.b.RootfsPath+"/.singularity.d/runscript", 0o755)
 	if err != nil {
 		return
 	}
@@ -410,7 +410,7 @@ exec "$@"
 }
 
 func (cp *OCIConveyorPacker) insertEnv() (err error) {
-	f, err := os.Create(cp.b.RootfsPath + "/.apptainer.d/env/10-docker2apptainer.sh")
+	f, err := os.Create(cp.b.RootfsPath + "/.singularity.d/env/10-docker2apptainer.sh")
 	if err != nil {
 		return
 	}
@@ -442,7 +442,7 @@ func (cp *OCIConveyorPacker) insertEnv() (err error) {
 
 	f.Sync()
 
-	err = os.Chmod(cp.b.RootfsPath+"/.apptainer.d/env/10-docker2apptainer.sh", 0o755)
+	err = os.Chmod(cp.b.RootfsPath+"/.singularity.d/env/10-docker2apptainer.sh", 0o755)
 	if err != nil {
 		return
 	}
@@ -460,7 +460,7 @@ func (cp *OCIConveyorPacker) insertOCILabels() (err error) {
 		return err
 	}
 
-	err = ioutil.WriteFile(filepath.Join(cp.b.RootfsPath, "/.apptainer.d/labels.json"), []byte(text), 0o644)
+	err = ioutil.WriteFile(filepath.Join(cp.b.RootfsPath, "/.singularity.d/labels.json"), []byte(text), 0o644)
 	return err
 }
 

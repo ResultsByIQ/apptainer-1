@@ -75,7 +75,7 @@ func (s *stage) insertMetadata() error {
 func insertEnvScript(b *types.Bundle) error {
 	if b.RunSection("environment") && b.Recipe.ImageData.Environment.Script != "" {
 		sylog.Infof("Adding environment to container")
-		envScriptPath := filepath.Join(b.RootfsPath, "/.apptainer.d/env/90-environment.sh")
+		envScriptPath := filepath.Join(b.RootfsPath, "/.singularity.d/env/90-environment.sh")
 		_, err := os.Stat(envScriptPath)
 		if os.IsNotExist(err) {
 			err := ioutil.WriteFile(envScriptPath, []byte("#!/bin/sh\n\n"+b.Recipe.ImageData.Environment.Script+"\n"), 0o755)
@@ -125,7 +125,7 @@ func insertRunScript(b *types.Bundle) error {
 	if b.RunSection("runscript") && b.Recipe.ImageData.Runscript.Script != "" {
 		sylog.Infof("Adding runscript")
 		shebang, script := handleShebangScript(b.Recipe.ImageData.Runscript)
-		err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.apptainer.d/runscript"), []byte(shebang+"\n\n"+script+"\n"), 0o755)
+		err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.singularity.d/runscript"), []byte(shebang+"\n\n"+script+"\n"), 0o755)
 		if err != nil {
 			return err
 		}
@@ -137,7 +137,7 @@ func insertStartScript(b *types.Bundle) error {
 	if b.RunSection("startscript") && b.Recipe.ImageData.Startscript.Script != "" {
 		sylog.Infof("Adding startscript")
 		shebang, script := handleShebangScript(b.Recipe.ImageData.Startscript)
-		err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.apptainer.d/startscript"), []byte(shebang+"\n\n"+script+"\n"), 0o755)
+		err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.singularity.d/startscript"), []byte(shebang+"\n\n"+script+"\n"), 0o755)
 		if err != nil {
 			return err
 		}
@@ -148,7 +148,7 @@ func insertStartScript(b *types.Bundle) error {
 func insertTestScript(b *types.Bundle) error {
 	if b.RunSection("test") && b.Recipe.ImageData.Test.Script != "" {
 		sylog.Infof("Adding testscript")
-		err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.apptainer.d/test"), []byte("#!/bin/sh\n\n"+b.Recipe.ImageData.Test.Script+"\n"), 0o755)
+		err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.singularity.d/test"), []byte("#!/bin/sh\n\n"+b.Recipe.ImageData.Test.Script+"\n"), 0o755)
 		if err != nil {
 			return err
 		}
@@ -158,10 +158,10 @@ func insertTestScript(b *types.Bundle) error {
 
 func insertHelpScript(b *types.Bundle) error {
 	if b.RunSection("help") && b.Recipe.ImageData.Help.Script != "" {
-		_, err := os.Stat(filepath.Join(b.RootfsPath, "/.apptainer.d/runscript.help"))
+		_, err := os.Stat(filepath.Join(b.RootfsPath, "/.singularity.d/runscript.help"))
 		if err != nil || b.Opts.Force {
 			sylog.Infof("Adding help info")
-			err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.apptainer.d/runscript.help"), []byte(b.Recipe.ImageData.Help.Script+"\n"), 0o644)
+			err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.singularity.d/runscript.help"), []byte(b.Recipe.ImageData.Help.Script+"\n"), 0o644)
 			if err != nil {
 				return err
 			}
@@ -175,17 +175,17 @@ func insertHelpScript(b *types.Bundle) error {
 func insertDefinition(b *types.Bundle) error {
 	// if update, check for existing definition and move it to bootstrap history
 	if b.Opts.Update {
-		if _, err := os.Stat(filepath.Join(b.RootfsPath, "/.apptainer.d/Apptainer")); err == nil {
+		if _, err := os.Stat(filepath.Join(b.RootfsPath, "/.singularity.d/Apptainer")); err == nil {
 			// make bootstrap_history directory if it doesn't exist
-			if _, err := os.Stat(filepath.Join(b.RootfsPath, "/.apptainer.d/bootstrap_history")); err != nil {
-				err = os.Mkdir(filepath.Join(b.RootfsPath, "/.apptainer.d/bootstrap_history"), 0o755)
+			if _, err := os.Stat(filepath.Join(b.RootfsPath, "/.singularity.d/bootstrap_history")); err != nil {
+				err = os.Mkdir(filepath.Join(b.RootfsPath, "/.singularity.d/bootstrap_history"), 0o755)
 				if err != nil {
 					return err
 				}
 			}
 
 			// look at number of files in bootstrap_history to give correct file name
-			files, err := ioutil.ReadDir(filepath.Join(b.RootfsPath, "/.apptainer.d/bootstrap_history"))
+			files, err := ioutil.ReadDir(filepath.Join(b.RootfsPath, "/.singularity.d/bootstrap_history"))
 			if err != nil {
 				return err
 			}
@@ -194,14 +194,14 @@ func insertDefinition(b *types.Bundle) error {
 			len := strconv.Itoa(len(files))
 			histName := "Apptainer" + len
 			// move old definition into bootstrap_history
-			err = os.Rename(filepath.Join(b.RootfsPath, "/.apptainer.d/Apptainer"), filepath.Join(b.RootfsPath, "/.apptainer.d/bootstrap_history", histName))
+			err = os.Rename(filepath.Join(b.RootfsPath, "/.singularity.d/Apptainer"), filepath.Join(b.RootfsPath, "/.singularity.d/bootstrap_history", histName))
 			if err != nil {
 				return err
 			}
 		}
 	}
 
-	err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.apptainer.d/Apptainer"), b.Recipe.Raw, 0o644)
+	err := ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.singularity.d/Apptainer"), b.Recipe.Raw, 0o644)
 	if err != nil {
 		return err
 	}
@@ -261,7 +261,7 @@ func insertLabelsJSON(b *types.Bundle) (err error) {
 		return err
 	}
 
-	err = ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.apptainer.d/labels.json"), []byte(text), 0o644)
+	err = ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.singularity.d/labels.json"), []byte(text), 0o644)
 	return err
 }
 
@@ -292,8 +292,8 @@ func insertJSONInspectMetadata(b *types.Bundle) error {
 
 func getExistingLabels(labels map[string]string, b *types.Bundle) error {
 	// check for existing labels in bundle
-	if _, err := os.Stat(filepath.Join(b.RootfsPath, "/.apptainer.d/labels.json")); err == nil {
-		jsonFile, err := os.Open(filepath.Join(b.RootfsPath, "/.apptainer.d/labels.json"))
+	if _, err := os.Stat(filepath.Join(b.RootfsPath, "/.singularity.d/labels.json")); err == nil {
+		jsonFile, err := os.Open(filepath.Join(b.RootfsPath, "/.singularity.d/labels.json"))
 		if err != nil {
 			return err
 		}
@@ -331,14 +331,14 @@ func addBuildLabels(labels map[string]string, b *types.Bundle) error {
 
 	// help info if help exists in the definition and is run in the build
 	if b.RunSection("help") && b.Recipe.ImageData.Help.Script != "" {
-		labels["org.label-schema.usage"] = "/.apptainer.d/runscript.help"
-		labels["org.label-schema.usage.apptainer.runscript.help"] = "/.apptainer.d/runscript.help"
+		labels["org.label-schema.usage"] = "/.singularity.d/runscript.help"
+		labels["org.label-schema.usage.apptainer.runscript.help"] = "/.singularity.d/runscript.help"
 	}
 
 	// bootstrap header info, only if this build actually bootstrapped
 	if !b.Opts.Update || b.Opts.Force {
 		for key, value := range b.Recipe.Header {
-			labels["org.label-schema.usage.apptainer.deffile."+key] = value
+			labels["org.label-schema.usage.singularity.deffile."+key] = value
 		}
 	}
 

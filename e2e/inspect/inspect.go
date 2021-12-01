@@ -141,28 +141,28 @@ func (c ctx) apptainerInspect(t *testing.T) {
 		{
 			name:      "label_org.label-schema.usage",
 			insType:   "--labels",
-			compareFn: compareLabel("org.label-schema.usage", "/.apptainer.d/runscript.help", ""),
+			compareFn: compareLabel("org.label-schema.usage", "/.singularity.d/runscript.help", ""),
 		},
 		{
-			name:      "label_org.label-schema.usage.apptainer.deffile.bootstrap",
+			name:      "label_org.label-schema.usage.singularity.deffile.bootstrap",
 			insType:   "--labels",
-			compareFn: compareLabel("org.label-schema.usage.apptainer.deffile.bootstrap", "library", ""),
+			compareFn: compareLabel("org.label-schema.usage.singularity.deffile.bootstrap", "library", ""),
 		},
 		{
-			name:      "label_org.label-schema.usage.apptainer.deffile.from",
+			name:      "label_org.label-schema.usage.singularity.deffile.from",
 			insType:   "--labels",
-			compareFn: compareLabel("org.label-schema.usage.apptainer.deffile.from", "alpine:3.11.5", ""),
+			compareFn: compareLabel("org.label-schema.usage.singularity.deffile.from", "alpine:3.11.5", ""),
 		},
 		{
 			name:      "label_org.label-schema.usage.apptainer.runscript.help",
 			insType:   "--labels",
-			compareFn: compareLabel("org.label-schema.usage.apptainer.runscript.help", "/.apptainer.d/runscript.help", ""),
+			compareFn: compareLabel("org.label-schema.usage.apptainer.runscript.help", "/.singularity.d/runscript.help", ""),
 		},
 		{
 			name:    "runscript",
 			insType: "--runscript",
 			compareFn: func(t *testing.T, meta *inspect.Metadata) {
-				out := "#!/bin/sh\n\ncat /.apptainer.d/runscript.help"
+				out := "#!/bin/sh\n\ncat /.singularity.d/runscript.help"
 				v := meta.Attributes.Runscript
 				if v != out {
 					t.Errorf("unexpected runscript output, got %s instead of %s", v, out)
@@ -210,7 +210,7 @@ func (c ctx) apptainerInspect(t *testing.T) {
 			name:    "helpfile",
 			insType: "--helpfile",
 			compareFn: func(t *testing.T, meta *inspect.Metadata) {
-				helpFile := "/.apptainer.d/runscript.help"
+				helpFile := "/.singularity.d/runscript.help"
 				out := "This is a e2e test container used for testing the 'inspect'\ncommand. This container \"inspector_container.sif\" should be placed\nin the \"e2e/testdata\" directory of Apptainer."
 				v := meta.Attributes.Helpfile
 				if v != out {
@@ -222,14 +222,14 @@ func (c ctx) apptainerInspect(t *testing.T) {
 			name:    "environment",
 			insType: "--environment",
 			compareFn: func(t *testing.T, meta *inspect.Metadata) {
-				envFile := "/.apptainer.d/env/90-environment.sh"
+				envFile := "/.singularity.d/env/90-environment.sh"
 				out := "#!/bin/sh\n# Custom environment shell code should follow\n\n\nexport test=\"testing\"\nexport e2e=\"e2e testing\""
 				v := meta.Attributes.Environment[envFile]
 				if v != out {
 					t.Errorf("unexpected environment for %s, got %s instead of %s", envFile, v, out)
 				}
 
-				envFile = "/.apptainer.d/env/91-environment.sh"
+				envFile = "/.singularity.d/env/91-environment.sh"
 				out = "export hello=\"world\""
 				v = meta.Attributes.Environment[envFile]
 				if v != out {

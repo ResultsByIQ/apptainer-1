@@ -219,7 +219,7 @@ func newCommand(allData bool, appName string, img *image.Image) *command {
 		sylog.Fatalf("Could not inspect image %s on this platform, only SIF and sandbox images are supported", img.Path)
 	}
 
-	pathPrefix := filepath.Join(prefix, "/.apptainer.d")
+	pathPrefix := filepath.Join(prefix, "/.singularity.d")
 	if appName != "" && !allData {
 		pathPrefix = fmt.Sprintf("%s/scif/apps/%s/scif", prefix, appName)
 	}
@@ -502,7 +502,7 @@ func (c *command) addEnvironmentCommand() {
 	if c.sifMetadata == nil {
 		c.script += `
 		for prefix in ${ALL_PATH}; do
-			if [ "${prefix##*/}" = ".apptainer.d" ]; then
+			if [ "${prefix##*/}" = ".singularity.d" ]; then
 				for env in $prefix/env/10-docker*.sh; do
 					if [ -f "$env" ]; then
 						cat_file "environment" "$env"

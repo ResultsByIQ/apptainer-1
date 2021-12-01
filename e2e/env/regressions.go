@@ -36,9 +36,9 @@ func (c ctx) issue5426(t *testing.T) {
 		e2e.ExpectExit(0),
 	)
 
-	// Remove the /.apptainer.d
-	if err := os.RemoveAll(path.Join(sandboxDir, ".apptainer.d")); err != nil {
-		t.Fatalf("Could not remove sandbox /.apptainer.d: %s", err)
+	// Remove the /.singularity.d
+	if err := os.RemoveAll(path.Join(sandboxDir, ".singularity.d")); err != nil {
+		t.Fatalf("Could not remove sandbox /.singularity.d: %s", err)
 	}
 	// Remove the /environment symlink
 	if err := os.Remove(path.Join(sandboxDir, "environment")); err != nil {

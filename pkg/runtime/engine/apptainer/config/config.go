@@ -614,19 +614,19 @@ func (e *EngineConfig) GetTargetGID() []int {
 }
 
 // SetLibrariesPath sets libraries to bind in container
-// /.apptainer.d/libs directory.
+// /.singularity.d/libs directory.
 func (e *EngineConfig) SetLibrariesPath(libraries []string) {
 	e.JSON.LibrariesPath = libraries
 }
 
 // AppendLibrariesPath adds libraries to bind in container
-// /.apptainer.d/libs directory.
+// /.singularity.d/libs directory.
 func (e *EngineConfig) AppendLibrariesPath(libraries ...string) {
 	e.JSON.LibrariesPath = append(e.JSON.LibrariesPath, libraries...)
 }
 
 // GetLibrariesPath returns libraries to bind in container
-// /.apptainer.d/libs directory.
+// /.singularity.d/libs directory.
 func (e *EngineConfig) GetLibrariesPath() []string {
 	return e.JSON.LibrariesPath
 }

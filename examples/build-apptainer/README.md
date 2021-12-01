@@ -19,7 +19,7 @@ curl -L -o apptainer-${VERSION}.tar.gz
 ## Usage
 
 ```sh
-sudo apptainer build build-apptainer.sif build-apptainer.def
+sudo apptainer build build-apptainer.sif build-singularity.def
 
 ./build-apptainer.sif {version}
 

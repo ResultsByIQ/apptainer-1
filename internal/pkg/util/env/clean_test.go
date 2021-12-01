@@ -34,7 +34,7 @@ func TestSetContainerEnv(t *testing.T) {
 			name:     "no APPTAINERENV_",
 			homeDest: "/home/tester",
 			env: []string{
-				"LD_LIBRARY_PATH=/.apptainer.d/libs",
+				"LD_LIBRARY_PATH=/.singularity.d/libs",
 				"HOME=/home/john",
 				"SOME_INVALID_VAR:test",
 				"APPTAINERENV_=invalid",
@@ -61,7 +61,7 @@ func TestSetContainerEnv(t *testing.T) {
 			name:     "exclude PATH",
 			homeDest: "/home/tester",
 			env: []string{
-				"LD_LIBRARY_PATH=/.apptainer.d/libs",
+				"LD_LIBRARY_PATH=/.singularity.d/libs",
 				"HOME=/home/john",
 				"PS1=test",
 				"SOCIOPATH=VolanDeMort",
@@ -92,7 +92,7 @@ func TestSetContainerEnv(t *testing.T) {
 			name:     "special PATH envs",
 			homeDest: "/home/tester",
 			env: []string{
-				"LD_LIBRARY_PATH=/.apptainer.d/libs",
+				"LD_LIBRARY_PATH=/.singularity.d/libs",
 				"HOME=/home/john",
 				"APPTAINERENV_APPEND_PATH=/sylabs/container",
 				"PS1=test",
@@ -126,7 +126,7 @@ func TestSetContainerEnv(t *testing.T) {
 			cleanEnv: true,
 			homeDest: "/home/tester",
 			env: []string{
-				"LD_LIBRARY_PATH=/.apptainer.d/libs",
+				"LD_LIBRARY_PATH=/.singularity.d/libs",
 				"HOME=/home/john",
 				"PS1=test",
 				"TERM=xterm-256color",
@@ -154,7 +154,7 @@ func TestSetContainerEnv(t *testing.T) {
 			cleanEnv: true,
 			homeDest: "/home/tester",
 			env: []string{
-				"LD_LIBRARY_PATH=/.apptainer.d/libs",
+				"LD_LIBRARY_PATH=/.singularity.d/libs",
 				"HOME=/home/john",
 				"PS1=test",
 				"TERM=xterm-256color",

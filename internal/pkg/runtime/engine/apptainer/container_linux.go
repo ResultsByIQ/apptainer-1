@@ -2034,7 +2034,7 @@ func (c *container) addLibsMount(system *mount.System) error {
 
 	flags := uintptr(syscall.MS_BIND | syscall.MS_NOSUID | syscall.MS_NODEV | syscall.MS_RDONLY | syscall.MS_REC)
 
-	containerDir := "/.apptainer.d/libs"
+	containerDir := "/.singularity.d/libs"
 	sessionDir := "/libs"
 
 	if err := c.session.AddDir(sessionDir); err != nil {

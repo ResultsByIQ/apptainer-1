@@ -623,8 +623,8 @@ func (b *bufferCloser) Close() error {
 	return nil
 }
 
-// Register a virtual file /.apptainer.d/env/inject-apptainer-env.sh sourced
-// after /.apptainer.d/env/99-base.sh or /environment.
+// Register a virtual file /.singularity.d/env/inject-apptainer-env.sh sourced
+// after /.singularity.d/env/99-base.sh or /environment.
 // This handler turns all SINGUALRITYENV_KEY=VAL defined variables into their form:
 // export KEY=VAL. It can be sourced only once otherwise it returns an empty content.
 func injectEnvHandler(senv map[string]string) interpreter.OpenHandler {
@@ -655,7 +655,7 @@ func injectEnvHandler(senv map[string]string) interpreter.OpenHandler {
 				case "UID", "GID":
 				case "LD_LIBRARY_PATH":
 					if value != "" {
-						b.WriteString(fmt.Sprintf(snippet, key, value+":/.apptainer.d/libs"))
+						b.WriteString(fmt.Sprintf(snippet, key, value+":/.singularity.d/libs"))
 					}
 				default:
 					b.WriteString(fmt.Sprintf(snippet, key, shell.EscapeDoubleQuotes(value)))
@@ -827,7 +827,7 @@ func runActionScript(engineConfig *apptainerConfig.EngineConfig) ([]string, []st
 	senv := engineConfig.GetApptainerEnv()
 	shell.RegisterOpenHandler("/.inject-apptainer-env.sh", injectEnvHandler(senv))
 
-	shell.RegisterOpenHandler("/.apptainer.d/env/99-runtimevars.sh", runtimeVarsHandler(senv))
+	shell.RegisterOpenHandler("/.singularity.d/env/99-runtimevars.sh", runtimeVarsHandler(senv))
 
 	// register few builtin
 	shell.RegisterShellBuiltin("getallenv", getAllEnvBuiltin(shell))
@@ -852,7 +852,7 @@ func runActionScript(engineConfig *apptainerConfig.EngineConfig) ([]string, []st
 		return nil, nil, err
 	}
 
-	if len(args) > 0 && args[0] == "/.apptainer.d/runscript" {
+	if len(args) > 0 && args[0] == "/.singularity.d/runscript" {
 		b, err := getDockerRunscript(args[0])
 		if err != nil {
 			return nil, nil, err

@@ -481,7 +481,7 @@ func (c actionTests) RunFromURI(t *testing.T) {
 	e2e.EnsureRegistry(t)
 
 	runScript := "testdata/runscript.sh"
-	bind := fmt.Sprintf("%s:/.apptainer.d/runscript", runScript)
+	bind := fmt.Sprintf("%s:/.singularity.d/runscript", runScript)
 
 	fi, err := os.Stat(runScript)
 	if err != nil {

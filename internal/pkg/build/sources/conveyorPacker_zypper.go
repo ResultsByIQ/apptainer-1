@@ -362,7 +362,7 @@ func (cp *ZypperConveyorPacker) insertBaseEnv() (err error) {
 }
 
 func (cp *ZypperConveyorPacker) insertRunScript() (err error) {
-	f, err := os.Create(cp.b.RootfsPath + "/.apptainer.d/runscript")
+	f, err := os.Create(cp.b.RootfsPath + "/.singularity.d/runscript")
 	if err != nil {
 		return
 	}
@@ -380,7 +380,7 @@ func (cp *ZypperConveyorPacker) insertRunScript() (err error) {
 
 	f.Sync()
 
-	err = os.Chmod(cp.b.RootfsPath+"/.apptainer.d/runscript", 0o755)
+	err = os.Chmod(cp.b.RootfsPath+"/.singularity.d/runscript", 0o755)
 	if err != nil {
 		return
 	}

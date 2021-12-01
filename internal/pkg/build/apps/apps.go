@@ -245,7 +245,7 @@ func (pl *BuildApp) createAllApps(b *types.Bundle) error {
 		globalEnv94 += globalAppEnv(b, app)
 	}
 
-	return ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.apptainer.d/env/94-appsbase.sh"), []byte(globalEnv94), 0o755)
+	return ioutil.WriteFile(filepath.Join(b.RootfsPath, "/.singularity.d/env/94-appsbase.sh"), []byte(globalEnv94), 0o755)
 }
 
 func createAppRoot(b *types.Bundle, a *App) error {

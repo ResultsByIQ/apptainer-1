@@ -43,7 +43,7 @@ var instanceStartCmd = &cobra.Command{
 		image := args[0]
 		name := args[1]
 
-		a := append([]string{"/.apptainer.d/actions/start"}, args[2:]...)
+		a := append([]string{"/.singularity.d/actions/start"}, args[2:]...)
 		setVM(cmd)
 		if VM {
 			execVM(cmd, image, a)

@@ -367,7 +367,7 @@ func checkBuildTarget(path string) error {
 				required := 0
 				for _, f := range files {
 					switch f.Name() {
-					case ".apptainer.d", "dev", "proc", "sys":
+					case ".singularity.d", "dev", "proc", "sys":
 						required++
 					}
 				}

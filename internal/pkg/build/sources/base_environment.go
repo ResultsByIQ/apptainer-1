@@ -18,10 +18,10 @@ import (
 )
 
 const (
-	// Contents of /.apptainer.d/actions/exec
+	// Contents of /.singularity.d/actions/exec
 	execFileContent = `#!/bin/sh
 
-for script in /.apptainer.d/env/*.sh; do
+for script in /.singularity.d/env/*.sh; do
     if [ -f "$script" ]; then
         . "$script"
     fi
@@ -29,10 +29,10 @@ done
 
 exec "$@"
 `
-	// Contents of /.apptainer.d/actions/run
+	// Contents of /.singularity.d/actions/run
 	runFileContent = `#!/bin/sh
 
-for script in /.apptainer.d/env/*.sh; do
+for script in /.singularity.d/env/*.sh; do
     if [ -f "$script" ]; then
         . "$script"
     fi
@@ -47,17 +47,17 @@ if test -n "${APPTAINER_APPNAME:-}"; then
         exit 1
     fi
 
-elif test -x "/.apptainer.d/runscript"; then
-    exec "/.apptainer.d/runscript" "$@"
+elif test -x "/.singularity.d/runscript"; then
+    exec "/.singularity.d/runscript" "$@"
 else
     echo "No Apptainer runscript found, executing /bin/sh"
     exec /bin/sh "$@"
 fi
 `
-	// Contents of /.apptainer.d/actions/shell
+	// Contents of /.singularity.d/actions/shell
 	shellFileContent = `#!/bin/sh
 
-for script in /.apptainer.d/env/*.sh; do
+for script in /.singularity.d/env/*.sh; do
     if [ -f "$script" ]; then
         . "$script"
     fi
@@ -83,27 +83,27 @@ else
 fi
 exit 1
 `
-	// Contents of /.apptainer.d/actions/start
+	// Contents of /.singularity.d/actions/start
 	startFileContent = `#!/bin/sh
 
 # if we are here start notify PID 1 to continue
 # DON'T REMOVE
 kill -CONT 1
 
-for script in /.apptainer.d/env/*.sh; do
+for script in /.singularity.d/env/*.sh; do
     if [ -f "$script" ]; then
         . "$script"
     fi
 done
 
-if test -x "/.apptainer.d/startscript"; then
-    exec "/.apptainer.d/startscript"
+if test -x "/.singularity.d/startscript"; then
+    exec "/.singularity.d/startscript"
 fi
 `
-	// Contents of /.apptainer.d/actions/test
+	// Contents of /.singularity.d/actions/test
 	testFileContent = `#!/bin/sh
 
-for script in /.apptainer.d/env/*.sh; do
+for script in /.singularity.d/env/*.sh; do
     if [ -f "$script" ]; then
         . "$script"
     fi
@@ -118,14 +118,14 @@ if test -n "${APPTAINER_APPNAME:-}"; then
         echo "No tests for contained app: ${APPTAINER_APPNAME:-}"
         exit 1
     fi
-elif test -x "/.apptainer.d/test"; then
-    exec "/.apptainer.d/test" "$@"
+elif test -x "/.singularity.d/test"; then
+    exec "/.singularity.d/test" "$@"
 else
     echo "No test found in container, executing /bin/sh -c true"
     exec /bin/sh -c true
 fi
 `
-	// Contents of /.apptainer.d/env/01-base.sh
+	// Contents of /.singularity.d/env/01-base.sh
 	baseShFileContent = `#!/bin/sh
 # 
 # Copyright (c) 2017, ApptainerWare, LLC. All rights reserved.
@@ -150,12 +150,12 @@ fi
 
 
 `
-	// Contents of /.apptainer.d/env/90-environment.sh and /.apptainer.d/env/91-environment.sh
+	// Contents of /.singularity.d/env/90-environment.sh and /.singularity.d/env/91-environment.sh
 	environmentShFileContent = `#!/bin/sh
 # Custom environment shell code should follow
 
 `
-	// Contents of /.apptainer.d/env/95-apps.sh
+	// Contents of /.singularity.d/env/95-apps.sh
 	appsShFileContent = `#!/bin/sh
 #
 # Copyright (c) 2017, ApptainerWare, LLC. All rights reserved.
@@ -208,7 +208,7 @@ if test -n "${APPTAINER_APPNAME:-}"; then
 fi
 
 `
-	// Contents of /.apptainer.d/env/99-base.sh
+	// Contents of /.singularity.d/env/99-base.sh
 	base99ShFileContent = `#!/bin/sh
 # 
 # Copyright (c) 2017, ApptainerWare, LLC. All rights reserved.
@@ -233,16 +233,16 @@ fi
 
 
 if [ -z "$LD_LIBRARY_PATH" ]; then
-    LD_LIBRARY_PATH="/.apptainer.d/libs"
+    LD_LIBRARY_PATH="/.singularity.d/libs"
 else
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/.apptainer.d/libs"
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/.singularity.d/libs"
 fi
 
 PS1="Apptainer> "
 export LD_LIBRARY_PATH PS1
 `
 
-	// Contents of /.apptainer.d/env/99-runtimevars.sh
+	// Contents of /.singularity.d/env/99-runtimevars.sh
 	base99runtimevarsShFileContent = `#!/bin/sh
 # Copyright (c) 2017-2019, Sylabs, Inc. All rights reserved.
 #
@@ -271,24 +271,24 @@ unset SING_USER_DEFINED_PREPEND_PATH \
 export PATH
 `
 
-	// Contents of /.apptainer.d/runscript
+	// Contents of /.singularity.d/runscript
 	runscriptFileContent = `#!/bin/sh
 
 echo "There is no runscript defined for this container\n";
 `
-	// Contents of /.apptainer.d/startscript
+	// Contents of /.singularity.d/startscript
 	startscriptFileContent = `#!/bin/sh
 `
 )
 
 func makeDirs(rootPath string) error {
-	if err := os.MkdirAll(filepath.Join(rootPath, ".apptainer.d", "libs"), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Join(rootPath, ".singularity.d", "libs"), 0o755); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Join(rootPath, ".apptainer.d", "actions"), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Join(rootPath, ".singularity.d", "actions"), 0o755); err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Join(rootPath, ".apptainer.d", "env"), 0o755); err != nil {
+	if err := os.MkdirAll(filepath.Join(rootPath, ".singularity.d", "env"), 0o755); err != nil {
 		return err
 	}
 	if err := os.MkdirAll(filepath.Join(rootPath, "dev"), 0o755); err != nil {
@@ -317,32 +317,32 @@ func makeDirs(rootPath string) error {
 
 func makeSymlinks(rootPath string) error {
 	if _, err := os.Stat(filepath.Join(rootPath, "apptainer")); err != nil {
-		if err = os.Symlink(".apptainer.d/runscript", filepath.Join(rootPath, "apptainer")); err != nil {
+		if err = os.Symlink(".singularity.d/runscript", filepath.Join(rootPath, "apptainer")); err != nil {
 			return err
 		}
 	}
 	if _, err := os.Stat(filepath.Join(rootPath, ".run")); err != nil {
-		if err = os.Symlink(".apptainer.d/actions/run", filepath.Join(rootPath, ".run")); err != nil {
+		if err = os.Symlink(".singularity.d/actions/run", filepath.Join(rootPath, ".run")); err != nil {
 			return err
 		}
 	}
 	if _, err := os.Stat(filepath.Join(rootPath, ".exec")); err != nil {
-		if err = os.Symlink(".apptainer.d/actions/exec", filepath.Join(rootPath, ".exec")); err != nil {
+		if err = os.Symlink(".singularity.d/actions/exec", filepath.Join(rootPath, ".exec")); err != nil {
 			return err
 		}
 	}
 	if _, err := os.Stat(filepath.Join(rootPath, ".test")); err != nil {
-		if err = os.Symlink(".apptainer.d/actions/test", filepath.Join(rootPath, ".test")); err != nil {
+		if err = os.Symlink(".singularity.d/actions/test", filepath.Join(rootPath, ".test")); err != nil {
 			return err
 		}
 	}
 	if _, err := os.Stat(filepath.Join(rootPath, ".shell")); err != nil {
-		if err = os.Symlink(".apptainer.d/actions/shell", filepath.Join(rootPath, ".shell")); err != nil {
+		if err = os.Symlink(".singularity.d/actions/shell", filepath.Join(rootPath, ".shell")); err != nil {
 			return err
 		}
 	}
 	if _, err := os.Stat(filepath.Join(rootPath, "environment")); err != nil {
-		if err = os.Symlink(".apptainer.d/env/90-environment.sh", filepath.Join(rootPath, "environment")); err != nil {
+		if err = os.Symlink(".singularity.d/env/90-environment.sh", filepath.Join(rootPath, "environment")); err != nil {
 			return err
 		}
 	}
@@ -377,40 +377,40 @@ func makeFiles(rootPath string) error {
 	if err := makeFile(filepath.Join(rootPath, "etc", "resolv.conf"), 0o644, ""); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "actions", "exec"), 0o755, execFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "actions", "exec"), 0o755, execFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "actions", "run"), 0o755, runFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "actions", "run"), 0o755, runFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "actions", "shell"), 0o755, shellFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "actions", "shell"), 0o755, shellFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "actions", "start"), 0o755, startFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "actions", "start"), 0o755, startFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "actions", "test"), 0o755, testFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "actions", "test"), 0o755, testFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "env", "01-base.sh"), 0o755, baseShFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "env", "01-base.sh"), 0o755, baseShFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "env", "90-environment.sh"), 0o755, environmentShFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "env", "90-environment.sh"), 0o755, environmentShFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "env", "95-apps.sh"), 0o755, appsShFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "env", "95-apps.sh"), 0o755, appsShFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "env", "99-base.sh"), 0o755, base99ShFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "env", "99-base.sh"), 0o755, base99ShFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "env", "99-runtimevars.sh"), 0o755, base99runtimevarsShFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "env", "99-runtimevars.sh"), 0o755, base99runtimevarsShFileContent); err != nil {
 		return err
 	}
-	if err := makeFile(filepath.Join(rootPath, ".apptainer.d", "runscript"), 0o755, runscriptFileContent); err != nil {
+	if err := makeFile(filepath.Join(rootPath, ".singularity.d", "runscript"), 0o755, runscriptFileContent); err != nil {
 		return err
 	}
-	return makeFile(filepath.Join(rootPath, ".apptainer.d", "startscript"), 0o755, startscriptFileContent)
+	return makeFile(filepath.Join(rootPath, ".singularity.d", "startscript"), 0o755, startscriptFileContent)
 }
 
 func makeBaseEnv(rootPath string) (err error) {

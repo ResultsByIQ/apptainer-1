@@ -27,7 +27,7 @@ type ctx struct {
 
 const (
 	defaultPath   = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-	apptainerLibs = "/.apptainer.d/libs"
+	apptainerLibs = "/.singularity.d/libs"
 )
 
 func (c ctx) apptainerEnv(t *testing.T) {

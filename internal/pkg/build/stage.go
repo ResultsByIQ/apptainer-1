@@ -36,7 +36,7 @@ type stage struct {
 
 const (
 	sLabelsPath  = "/.build.labels"
-	sEnvironment = "APPTAINER_ENVIRONMENT=/.apptainer.d/env/91-environment.sh"
+	sEnvironment = "APPTAINER_ENVIRONMENT=/.singularity.d/env/91-environment.sh"
 	sLabels      = "APPTAINER_LABELS=" + sLabelsPath
 )
 

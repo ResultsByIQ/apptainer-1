@@ -180,7 +180,7 @@ var ExecCmd = &cobra.Command{
 	Args:                  cobra.MinimumNArgs(2),
 	PreRun:                actionPreRun,
 	Run: func(cmd *cobra.Command, args []string) {
-		a := append([]string{"/.apptainer.d/actions/exec"}, args[1:]...)
+		a := append([]string{"/.singularity.d/actions/exec"}, args[1:]...)
 		setVM(cmd)
 		if VM {
 			execVM(cmd, args[0], a)
@@ -202,7 +202,7 @@ var ShellCmd = &cobra.Command{
 	Args:                  cobra.MinimumNArgs(1),
 	PreRun:                actionPreRun,
 	Run: func(cmd *cobra.Command, args []string) {
-		a := []string{"/.apptainer.d/actions/shell"}
+		a := []string{"/.singularity.d/actions/shell"}
 		setVM(cmd)
 		if VM {
 			execVM(cmd, args[0], a)
@@ -224,7 +224,7 @@ var RunCmd = &cobra.Command{
 	Args:                  cobra.MinimumNArgs(1),
 	PreRun:                actionPreRun,
 	Run: func(cmd *cobra.Command, args []string) {
-		a := append([]string{"/.apptainer.d/actions/run"}, args[1:]...)
+		a := append([]string{"/.singularity.d/actions/run"}, args[1:]...)
 		setVM(cmd)
 		if VM {
 			execVM(cmd, args[0], a)
@@ -246,7 +246,7 @@ var TestCmd = &cobra.Command{
 	Args:                  cobra.MinimumNArgs(1),
 	PreRun:                actionPreRun,
 	Run: func(cmd *cobra.Command, args []string) {
-		a := append([]string{"/.apptainer.d/actions/test"}, args[1:]...)
+		a := append([]string{"/.singularity.d/actions/test"}, args[1:]...)
 		setVM(cmd)
 		if VM {
 			execVM(cmd, args[0], a)

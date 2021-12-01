@@ -278,7 +278,7 @@ func (cp *DebootstrapConveyorPacker) insertBaseEnv(b *types.Bundle) (err error) 
 }
 
 func (cp *DebootstrapConveyorPacker) insertRunScript(b *types.Bundle) (err error) {
-	f, err := os.Create(b.RootfsPath + "/.apptainer.d/runscript")
+	f, err := os.Create(b.RootfsPath + "/.singularity.d/runscript")
 	if err != nil {
 		return
 	}
@@ -296,7 +296,7 @@ func (cp *DebootstrapConveyorPacker) insertRunScript(b *types.Bundle) (err error
 
 	f.Sync()
 
-	err = os.Chmod(b.RootfsPath+"/.apptainer.d/runscript", 0o755)
+	err = os.Chmod(b.RootfsPath+"/.singularity.d/runscript", 0o755)
 	if err != nil {
 		return
 	}

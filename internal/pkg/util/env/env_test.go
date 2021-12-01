@@ -26,7 +26,7 @@ func TestSetFromList(t *testing.T) {
 		{
 			name: "all ok",
 			environ: []string{
-				"LD_LIBRARY_PATH=/.apptainer.d/libs",
+				"LD_LIBRARY_PATH=/.singularity.d/libs",
 				"HOME=/home/tester",
 				"PS1=test",
 				"TERM=xterm-256color",
@@ -42,7 +42,7 @@ func TestSetFromList(t *testing.T) {
 		{
 			name: "bad envs",
 			environ: []string{
-				"LD_LIBRARY_PATH=/.apptainer.d/libs",
+				"LD_LIBRARY_PATH=/.singularity.d/libs",
 				"HOME=/home/tester",
 				"PS1=test",
 				"TERM=xterm-256color",

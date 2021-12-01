@@ -9,7 +9,7 @@ $(apptainer_build_config): $(BUILDDIR)/config.h $(SOURCEDIR)/scripts/go-generate
 CLEANFILES += $(apptainer_build_config)
 
 # contain apptainer_SOURCE variable list
-apptainer_deps := $(BUILDDIR_ABSPATH)/apptainer.d
+apptainer_deps := $(BUILDDIR_ABSPATH)/singularity.d
 
 -include $(apptainer_deps)
 

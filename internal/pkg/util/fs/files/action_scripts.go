@@ -85,13 +85,13 @@ restore_env() {
 clear_env
 shopt -s expand_aliases
 
-if test -d "/.apptainer.d/env"; then
-    for __script__ in /.apptainer.d/env/*.sh; do
+if test -d "/.singularity.d/env"; then
+    for __script__ in /.singularity.d/env/*.sh; do
         if test -f "${__script__}"; then
             sylog debug "Sourcing ${__script__}"
 
             case "${__script__}" in
-            /.apptainer.d/env/90-environment.sh)
+            /.singularity.d/env/90-environment.sh)
                 # docker files below may not be present depending of image source
                 # and build, so we also fix the PATH if not defined here
                 if ! test -v PATH; then
@@ -99,14 +99,14 @@ if test -d "/.apptainer.d/env"; then
                 fi
                 source "${__script__}"
                 ;;
-            /.apptainer.d/env/10-docker2apptainer.sh| \
-            /.apptainer.d/env/10-docker.sh)
+            /.singularity.d/env/10-docker2apptainer.sh| \
+            /.singularity.d/env/10-docker.sh)
                 source "${__script__}"
                 # append potential missing path from the default PATH
                 # used by Apptainer
                 export PATH="$(fixpath)"
                 ;;
-            /.apptainer.d/env/99-base.sh)
+            /.singularity.d/env/99-base.sh)
                 # this file is the common denominator in image built since
                 # Apptainer 2.3, inject forwarded variables right after
                 source "${__script__}"
@@ -127,15 +127,15 @@ else
     source "/.inject-apptainer-env.sh"
 fi
 
-if ! test -f "/.apptainer.d/env/99-runtimevars.sh"; then
-    source "/.apptainer.d/env/99-runtimevars.sh"
+if ! test -f "/.singularity.d/env/99-runtimevars.sh"; then
+    source "/.singularity.d/env/99-runtimevars.sh"
 fi
 
 shopt -u expand_aliases
 restore_env
 
 # See https://github.com/apptainer/apptainer/issues/5340
-# If there is no .apptainer.d then a custom PS1 wasn't set.
+# If there is no .singularity.d then a custom PS1 wasn't set.
 # If we were called through a script and PS1 is empty this
 # gives a confusing silent prompt. Force a PS1 if it's empty.
 if test -z "${PS1:-}"; then
@@ -154,7 +154,7 @@ else
     export PROMPT_COMMAND="${PROMPT_COMMAND:-}; PROMPT_COMMAND=\"\${PROMPT_COMMAND%%; PROMPT_COMMAND=*}\"; PS1=\"${PS1}\""
 fi
 
-export APPTAINER_ENVIRONMENT="${APPTAINER_ENVIRONMENT:-/.apptainer.d/env/91-environment.sh}"
+export APPTAINER_ENVIRONMENT="${APPTAINER_ENVIRONMENT:-/.singularity.d/env/91-environment.sh}"
 
 sylog debug "Running action command ${__apptainer_cmd__}"
 
@@ -181,8 +181,8 @@ run)
         fi
         sylog error "no runscript for contained app: ${APPTAINER_APPNAME:-}"
         exit 1
-    elif test -x "/.apptainer.d/runscript"; then
-        exec "/.apptainer.d/runscript" "$@"
+    elif test -x "/.singularity.d/runscript"; then
+        exec "/.singularity.d/runscript" "$@"
     elif test -x "/apptainer"; then
         exec "/apptainer" "$@"
     elif test -x "/bin/sh"; then
@@ -199,15 +199,15 @@ test)
         fi
         sylog error "No tests for contained app: ${APPTAINER_APPNAME:-}"
         exit 1
-    elif test -x "/.apptainer.d/test"; then
-        exec "/.apptainer.d/test" "$@"
+    elif test -x "/.singularity.d/test"; then
+        exec "/.singularity.d/test" "$@"
     fi
 
     sylog info "No test script found in container, exiting"
     exit 0 ;;
 start)
-    if test -x "/.apptainer.d/startscript"; then
-        exec "/.apptainer.d/startscript" "$@"
+    if test -x "/.singularity.d/startscript"; then
+        exec "/.singularity.d/startscript" "$@"
     fi
 
     sylog info "No instance start script found in container"
