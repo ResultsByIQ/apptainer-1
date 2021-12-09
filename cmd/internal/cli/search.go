@@ -13,7 +13,6 @@ import (
 	"runtime"
 
 	"github.com/apptainer/apptainer/docs"
-	"github.com/apptainer/apptainer/internal/pkg/client/library"
 	"github.com/apptainer/apptainer/pkg/cmdline"
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/spf13/cobra"
@@ -73,19 +72,7 @@ var SearchCmd = &cobra.Command{
 	DisableFlagsInUseLine: true,
 	Args:                  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := getLibraryClientConfig(SearchLibraryURI)
-		if err != nil {
-			sylog.Fatalf("Error while getting library client config: %v", err)
-		}
-
-		libraryClient, err := client.NewClient(config)
-		if err != nil {
-			sylog.Fatalf("Error initializing library client: %v", err)
-		}
-
-		if err := library.SearchLibrary(cmd.Context(), libraryClient, args[0], SearchArch, SearchSigned); err != nil {
-			sylog.Fatalf("Couldn't search library: %v", err)
-		}
+		sylog.Fatalf("Support for Commercial libraries has been removed")
 	},
 
 	Use:     docs.SearchUse,

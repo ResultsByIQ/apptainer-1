@@ -16,7 +16,6 @@ import (
 	"runtime"
 
 	"github.com/apptainer/apptainer/docs"
-	"github.com/apptainer/apptainer/internal/pkg/remote/endpoint"
 	"github.com/apptainer/apptainer/internal/pkg/util/fs"
 	"github.com/apptainer/apptainer/internal/pkg/util/interactive"
 	"github.com/apptainer/apptainer/pkg/build/types"
@@ -479,21 +478,4 @@ func makeDockerCredentials(cmd *cobra.Command) (authConf *ocitypes.DockerAuthCon
 	// pointer, which will mean containers/image falls back to looking for
 	// .docker/config.json
 	return nil, nil
-}
-
-// get configuration for remote library, builder, keyserver that may be used in the build
-func getServiceConfigs(buildURI, libraryURI, keyserverURI string) (*scsbuildclient.Config, *scslibclient.Config, []scskeyclient.Option, error) {
-	lc, err := getLibraryClientConfig(libraryURI)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-	bc, err := getBuilderClientConfig(buildURI)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-	co, err := getKeyserverClientOpts(keyserverURI, endpoint.KeyserverVerifyOp)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-	return bc, lc, co, nil
 }

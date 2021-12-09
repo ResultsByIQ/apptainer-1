@@ -12,17 +12,13 @@ package sypgp
 
 import (
 	"bytes"
-	"context"
 	"crypto"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
 	"syscall"
@@ -646,61 +642,6 @@ func formatMROutput(mrString string) (int, []byte, error) {
 	return count, retList.Bytes(), nil
 }
 
-// SearchPubkey connects to a key server and searches for a specific key
-func SearchPubkey(ctx context.Context, search string, longOutput bool, opts ...client.Option) error {
-	// If the search term is 8+ hex chars then it's a fingerprint, and
-	// we need to prefix with 0x for the search.
-	IsFingerprint := regexp.MustCompile(`^[0-9A-F]{8,}$`).MatchString
-	if IsFingerprint(search) {
-		search = "0x" + search
-	}
-
-	// Get a Key Service client.
-	c, err := client.NewClient(opts...)
-	if err != nil {
-		return err
-	}
-
-	// the max entities to print.
-	pd := client.PageDetails{
-		// still will only print 100 entities
-		Size: 256,
-	}
-
-	// set the machine readable output on
-	options := []string{client.OptionMachineReadable}
-	// Retrieve first page of search results from Key Service.
-	keyText, err := c.PKSLookup(ctx, &pd, search, client.OperationIndex, true, false, options)
-	if err != nil {
-		var httpError *client.HTTPError
-		if ok := errors.As(err, &httpError); ok && httpError.Code() == http.StatusUnauthorized {
-			// The request failed with HTTP code unauthorized. Guide user to fix that.
-			sylog.Infof(helpAuth)
-			return fmt.Errorf("unauthorized or missing token")
-		} else if ok && httpError.Code() == http.StatusNotFound {
-			return fmt.Errorf("no matching keys found for fingerprint")
-		} else {
-			return fmt.Errorf("failed to get key: %v", err)
-		}
-	}
-
-	if longOutput {
-		kcount, keyList, err := formatMROutputLongList(keyText)
-		fmt.Printf("Showing %d results\n\n%s", kcount, keyList)
-		if err != nil {
-			return fmt.Errorf("could not reformat key output")
-		}
-	} else {
-		kcount, keyList, err := formatMROutput(keyText)
-		fmt.Printf("Showing %d results\n\n%s", kcount, keyList)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 // getEncryptionAlgorithmName obtains the algorithm name for key encryption
 func getEncryptionAlgorithmName(n string) (string, error) {
 	algorithmName := ""
@@ -841,54 +782,6 @@ func formatMROutputLongList(mrString string) (int, []byte, error) {
 	}
 
 	return keyList.keyCount, retList.Bytes(), nil
-}
-
-// FetchPubkey pulls a public key from the Key Service.
-func FetchPubkey(ctx context.Context, fingerprint string, noPrompt bool, opts ...client.Option) (openpgp.EntityList, error) {
-	// Decode fingerprint and ensure proper length.
-	var fp []byte
-	fp, err := hex.DecodeString(fingerprint)
-	if err != nil {
-		return nil, fmt.Errorf("failed to decode fingerprint: %v", err)
-	}
-
-	// theres probably a better way to do this
-	if len(fp) != 4 && len(fp) != 20 {
-		return nil, fmt.Errorf("not a valid key lenth: only accepts 8, or 40 chars")
-	}
-
-	// Get a Key Service client.
-	c, err := client.NewClient(opts...)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pull key from Key Service.
-	keyText, err := c.GetKey(ctx, fp)
-	if err != nil {
-		var httpError *client.HTTPError
-		if ok := errors.As(err, &httpError); ok && httpError.Code() == http.StatusUnauthorized {
-			// The request failed with HTTP code unauthorized. Guide user to fix that.
-			sylog.Infof(helpAuth)
-			return nil, fmt.Errorf("unauthorized or missing token")
-		} else if ok && httpError.Code() == http.StatusNotFound {
-			return nil, fmt.Errorf("no matching keys found for fingerprint")
-		} else {
-			return nil, fmt.Errorf("failed to get key: %v", err)
-		}
-	}
-
-	el, err := openpgp.ReadArmoredKeyRing(strings.NewReader(keyText))
-	if err != nil {
-		return nil, err
-	}
-	if len(el) == 0 {
-		return nil, fmt.Errorf("no keys in keyring")
-	}
-	if len(el) > 1 {
-		return nil, fmt.Errorf("server returned more than one key for unique fingerprint")
-	}
-	return el, nil
 }
 
 func serializeEntity(e *openpgp.Entity, blockType string) (string, error) {
@@ -1142,32 +1035,5 @@ func (keyring *Handle) ImportKey(kpath string, setNewPassword bool) error {
 		}
 	}
 
-	return nil
-}
-
-// PushPubkey pushes a public key to the Key Service.
-func PushPubkey(ctx context.Context, e *openpgp.Entity, opts ...client.Option) error {
-	keyText, err := serializeEntity(e, openpgp.PublicKeyType)
-	if err != nil {
-		return err
-	}
-
-	// Get a Key Service client.
-	c, err := client.NewClient(opts...)
-	if err != nil {
-		return err
-	}
-
-	// Push key to Key Service.
-	if err := c.PKSAdd(ctx, keyText); err != nil {
-		var httpError *client.HTTPError
-		if errors.As(err, &httpError) && httpError.Code() == http.StatusUnauthorized {
-			// The request failed with HTTP code unauthorized. Guide user to fix that.
-			sylog.Infof(helpAuth+helpPush, e.PrimaryKey.Fingerprint)
-			return fmt.Errorf("unauthorized or missing token")
-		}
-		return fmt.Errorf("key server did not accept PGP key: %v", err)
-
-	}
 	return nil
 }

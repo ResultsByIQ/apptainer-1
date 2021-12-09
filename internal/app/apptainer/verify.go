@@ -29,7 +29,6 @@ var errNotSignedByRequired = errors.New("image not signed by required entities")
 type VerifyCallback func(*sif.FileImage, integrity.VerifyResult) bool
 
 type verifier struct {
-	opts      []client.Option
 	groupIDs  []uint32
 	objectIDs []uint32
 	all       bool
@@ -39,15 +38,6 @@ type verifier struct {
 
 // VerifyOpt are used to configure v.
 type VerifyOpt func(v *verifier) error
-
-// OptVerifyUseKeyServer specifies that the keyserver specified by opts be used as a source of key
-// material, in addition to the local public keyring.
-func OptVerifyUseKeyServer(opts ...client.Option) VerifyOpt {
-	return func(v *verifier) error {
-		v.opts = opts
-		return nil
-	}
-}
 
 // OptVerifyGroup adds a verification task for the group with the specified groupID. This may be
 // called multiple times to request verification of more than one group.
@@ -110,19 +100,11 @@ func (v verifier) getOpts(ctx context.Context, f *sif.FileImage) ([]integrity.Ve
 
 	// Add keyring.
 	var kr openpgp.KeyRing
-	if v.opts != nil {
-		hkr, err := sypgp.NewHybridKeyRing(ctx, v.opts...)
-		if err != nil {
-			return nil, err
-		}
-		kr = hkr
-	} else {
-		pkr, err := sypgp.PublicKeyRing()
-		if err != nil {
-			return nil, err
-		}
-		kr = pkr
+	pkr, err := sypgp.PublicKeyRing()
+	if err != nil {
+		return nil, err
 	}
+	kr = pkr
 
 	// wrap the global keyring around
 	global := sypgp.NewHandle(buildcfg.APPTAINER_CONFDIR, sypgp.GlobalHandleOpt())

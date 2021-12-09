@@ -21,7 +21,6 @@ import (
 	"syscall"
 
 	"github.com/apptainer/apptainer/internal/pkg/build"
-	"github.com/apptainer/apptainer/internal/pkg/build/remotebuilder"
 	"github.com/apptainer/apptainer/internal/pkg/buildcfg"
 	"github.com/apptainer/apptainer/internal/pkg/cache"
 	"github.com/apptainer/apptainer/internal/pkg/remote/endpoint"

@@ -88,52 +88,6 @@ func (c ctx) pullTestImage(t *testing.T) string {
 	return imgPath
 }
 
-func (c ctx) assertLibraryCacheEntryExists(t *testing.T, imgPath, imgName string) {
-	// The cache should exist and have the correct entry
-	shasum, err := client.ImageHash(imgPath)
-	if err != nil {
-		t.Fatalf("Cannot get the shasum for image %s: %s", imgPath, err)
-	}
-
-	cacheEntryPath := filepath.Join(c.env.ImgCacheDir, "cache", "library", shasum, imgName)
-	if _, err := os.Stat(cacheEntryPath); os.IsNotExist(err) {
-		ls(t, c.env.TestDir)
-		ls(t, c.env.ImgCacheDir)
-		t.Fatalf("Cache entry %s for image %s with name %s does not exists: %s",
-			cacheEntryPath, imgPath, imgName, err)
-	}
-}
-
-// assertCacheDoesNotExist checks that the image cache that is associated to the
-// test DOES NOT exists.
-func (c ctx) assertCacheDoesNotExist(t *testing.T) {
-	cacheRoot := filepath.Join(c.env.ImgCacheDir, "cache")
-	if _, err := os.Stat(cacheRoot); !os.IsNotExist(err) {
-		// The root of the cache does exists
-		t.Fatalf("cache has been incorrectly created (cache root: %s)", cacheRoot)
-	}
-}
-
-func (c ctx) testApptainerCacheDir(t *testing.T) {
-	// Test plan:
-	//
-	// - create a temporary directory for the cache
-	// - pull a known image from the network
-	// - assert that there's an entry for this image in the cache
-	//
-	// If the file is in the temporary cache, it means apptainer
-	// followed the APPTAINER_CACHEDIR environment variable (set
-	// up deep in the e2e framework) to store the cached image.
-
-	cleanup := c.setupTemporaryCache(t)
-	defer cleanup(t)
-
-	imgPath := c.pullTestImage(t)
-
-	// there should be an entry for this image in the library cache
-	c.assertLibraryCacheEntryExists(t, imgPath, "alpine_latest.sif")
-}
-
 func ls(t *testing.T, dir string) {
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -175,9 +129,6 @@ func (c ctx) testApptainerDisableCache(t *testing.T) {
 	c.env.DisableCache = true
 
 	c.pullTestImage(t)
-
-	// the cache should not exist
-	c.assertCacheDoesNotExist(t)
 }
 
 func (c ctx) testApptainerReadOnlyCacheDir(t *testing.T) {
@@ -221,9 +172,6 @@ func (c ctx) testApptainerReadOnlyCacheDir(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to change the access mode to read-only: %s", err)
 	}
-
-	// the cache should not exist
-	c.assertCacheDoesNotExist(t)
 }
 
 func (c ctx) testApptainerSypgpDir(t *testing.T) {
@@ -269,7 +217,6 @@ func E2ETests(env e2e.TestEnv) testhelper.Tests {
 
 	return testhelper.Tests{
 		"read-only cache directory": c.testApptainerReadOnlyCacheDir,
-		"APPTAINER_CACHEDIR":        c.testApptainerCacheDir,
 		"apptainer disable cache":   c.testApptainerDisableCache,
 		"APPTAINER_SYPGPDIR":        c.testApptainerSypgpDir,
 	}

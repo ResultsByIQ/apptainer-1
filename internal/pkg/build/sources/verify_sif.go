@@ -16,13 +16,13 @@ import (
 )
 
 // checkSIFFingerprint checks whether a bootstrap SIF image verifies, and was signed with a specified fingerprint
-func checkSIFFingerprint(ctx context.Context, imagePath string, fingerprints []string, co ...scskeyclient.Option) error {
+func checkSIFFingerprint(ctx context.Context, imagePath string, fingerprints []string) error {
 	sylog.Infof("Checking bootstrap image verifies with fingerprint(s): %v", fingerprints)
-	return apptainer.VerifyFingerprints(ctx, imagePath, fingerprints, apptainer.OptVerifyUseKeyServer(co...))
+	return apptainer.VerifyFingerprints(ctx, imagePath, fingerprints)
 }
 
 // verifySIF checks whether a bootstrap SIF image verifies
-func verifySIF(ctx context.Context, imagePath string, co ...scskeyclient.Option) error {
+func verifySIF(ctx context.Context, imagePath string) error {
 	sylog.Infof("Verifying bootstrap image %s", imagePath)
-	return apptainer.Verify(ctx, imagePath, apptainer.OptVerifyUseKeyServer(co...))
+	return apptainer.Verify(ctx, imagePath)
 }

@@ -10,13 +10,10 @@
 package cli
 
 import (
-	"context"
 	"os"
 
 	"github.com/apptainer/apptainer/docs"
-	"github.com/apptainer/apptainer/internal/pkg/remote/endpoint"
 	"github.com/apptainer/apptainer/pkg/sylog"
-	"github.com/apptainer/apptainer/pkg/sypgp"
 	"github.com/spf13/cobra"
 )
 
@@ -25,24 +22,12 @@ var KeySearchCmd = &cobra.Command{
 	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		co, err := getKeyserverClientOpts(keyServerURI, endpoint.KeyserverSearchOp)
-		if err != nil {
-			sylog.Fatalf("Keyserver client failed: %s", err)
-		}
-
-		if err := doKeySearchCmd(cmd.Context(), args[0], co...); err != nil {
-			sylog.Errorf("search failed: %s", err)
-			os.Exit(2)
-		}
+		sylog.Errorf("Support for Commercial key servers has been removed")
+		os.Exit(2)
 	},
 
 	Use:     docs.KeySearchUse,
 	Short:   docs.KeySearchShort,
 	Long:    docs.KeySearchLong,
 	Example: docs.KeySearchExample,
-}
-
-func doKeySearchCmd(ctx context.Context, search string, co ...client.Option) error {
-	// get keyring with matching search string
-	return sypgp.SearchPubkey(ctx, search, keySearchLongList, co...)
 }

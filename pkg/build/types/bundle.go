@@ -47,8 +47,6 @@ type Options struct {
 	LibraryURL string `json:"libraryURL"`
 	// LibraryAuthToken contains authentication token to access specified library.
 	LibraryAuthToken string `json:"libraryAuthToken"`
-	// KeyServerOpts contains options for keyserver used for SIF fingerprint verification in builds.
-	KeyServerOpts []scskeyclient.Option
 	// contains docker credentials if specified.
 	DockerAuthConfig *ocitypes.DockerAuthConfig
 	// EncryptionKeyInfo specifies the key used for filesystem
