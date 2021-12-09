@@ -601,57 +601,6 @@ func date(s string) string {
 	return ret
 }
 
-// getKeyInfoFromList takes the lines, from strings.Split(), and a index of lines. Appends
-// the output into keyList. Returns a error if one occurs.
-func getKeyInfoFromList(keyList *mrKeyList, lines []string, index string) error {
-	var errRet error
-
-	if index == "pub" {
-		// Get the fingerprint for the key
-		keyList.keyFingerprint = lines[1]
-
-		// Get the bit length for the key
-		keyList.keyBit = lines[3]
-
-		var err error
-		// Get the key type
-		keyList.keyType, err = getEncryptionAlgorithmName(lines[2])
-		if err != nil {
-			errRet = err
-		}
-
-		// Get the date created for the key
-		keyList.keyDateCreated = date(lines[4])
-
-		// Get the expiration date for the key
-		keyList.keyDateExpired = date(lines[5])
-
-		// Get the key status
-		if lines[6] == "r" {
-			keyList.keyStatus = "[revoked]"
-		} else if lines[6] == "d" {
-			keyList.keyStatus = "[disabled]"
-		} else if lines[6] == "e" {
-			keyList.keyStatus = "[expired]"
-		} else {
-			keyList.keyStatus = "[enabled]"
-		}
-
-		// Only count the key if it has a fingerprint. Otherwise
-		// dont count it.
-		keyList.keyCount++
-	}
-	if index == "uid" {
-		// Get the name of the key
-		keyList.keyName = lines[1]
-
-		// After we get the name, the key is ready to print!
-		keyList.keyReady = true
-	}
-
-	return errRet
-}
-
 func serializeEntity(e *openpgp.Entity, blockType string) (string, error) {
 	w := bytes.NewBuffer(nil)
 

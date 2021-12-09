@@ -10,14 +10,11 @@
 package endpoint
 
 import (
-	"crypto/tls"
 	"fmt"
-	"net/http"
-	"time"
-
 	"github.com/apptainer/apptainer/internal/pkg/remote/credential"
 	remoteutil "github.com/apptainer/apptainer/internal/pkg/remote/util"
 	"github.com/apptainer/apptainer/pkg/sylog"
+	"net/http"
 )
 
 // KeyserverOp represents a keyserver operation type.
@@ -211,15 +208,4 @@ func (c *keyserverTransport) RoundTrip(req *http.Request) (*http.Response, error
 	}
 
 	return nil, fmt.Errorf("no keyserver configured")
-}
-
-var defaultClient = &http.Client{
-	Timeout: 5 * time.Second,
-	Transport: &http.Transport{
-		DisableKeepAlives: true,
-		// Note - when overriding transport we need to explicitly setup the
-		// proxy parsing from env vars that http.DefaultTransport does.
-		Proxy:           http.ProxyFromEnvironment,
-		TLSClientConfig: &tls.Config{},
-	},
 }
