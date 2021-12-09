@@ -227,9 +227,6 @@ func TestVerify(t *testing.T) {
 	s := httptest.NewServer(mockHKP{e: e})
 	defer s.Close()
 
-	// Create an option that points to the mock HKP server.
-	var keyServerOpt VerifyOpt
-
 	tests := []struct {
 		name         string
 		path         string
@@ -241,79 +238,79 @@ func TestVerify(t *testing.T) {
 		{
 			name:    "SignatureNotFound",
 			path:    filepath.Join("testdata", "images", "one-group.sif"),
-			opts:    []VerifyOpt{keyServerOpt},
+			opts:    []VerifyOpt{},
 			wantErr: &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:    "SignatureNotFoundNonLegacy",
 			path:    filepath.Join("testdata", "images", "one-group-signed.sif"),
-			opts:    []VerifyOpt{keyServerOpt, OptVerifyLegacy()},
+			opts:    []VerifyOpt{OptVerifyLegacy()},
 			wantErr: &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:    "SignatureNotFoundLegacy",
 			path:    filepath.Join("testdata", "images", "one-group-signed-legacy.sif"),
-			opts:    []VerifyOpt{keyServerOpt},
+			opts:    []VerifyOpt{},
 			wantErr: &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:    "SignatureNotFoundLegacyAll",
 			path:    filepath.Join("testdata", "images", "one-group-signed-legacy-all.sif"),
-			opts:    []VerifyOpt{keyServerOpt},
+			opts:    []VerifyOpt{},
 			wantErr: &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:    "SignatureNotFoundLegacyGroup",
 			path:    filepath.Join("testdata", "images", "one-group-signed-legacy-group.sif"),
-			opts:    []VerifyOpt{keyServerOpt},
+			opts:    []VerifyOpt{},
 			wantErr: &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:         "Defaults",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
-			opts:         []VerifyOpt{keyServerOpt},
+			opts:         []VerifyOpt{},
 			wantVerified: [][]uint32{{1, 2}},
 			wantEntity:   e,
 		},
 		{
 			name:         "OptVerifyGroup",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyGroup(1)},
+			opts:         []VerifyOpt{OptVerifyGroup(1)},
 			wantVerified: [][]uint32{{1, 2}},
 			wantEntity:   e,
 		},
 		{
 			name:         "OptVerifyObject",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyObject(1)},
+			opts:         []VerifyOpt{OptVerifyObject(1)},
 			wantVerified: [][]uint32{{1}},
 			wantEntity:   e,
 		},
 		{
 			name:         "LegacyDefaults",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy.sif"),
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyLegacy()},
+			opts:         []VerifyOpt{OptVerifyLegacy()},
 			wantVerified: [][]uint32{{2}},
 			wantEntity:   e,
 		},
 		{
 			name:         "LegacyOptVerifyObject",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-all.sif"),
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyLegacy(), OptVerifyObject(1)},
+			opts:         []VerifyOpt{OptVerifyLegacy(), OptVerifyObject(1)},
 			wantVerified: [][]uint32{{1}},
 			wantEntity:   e,
 		},
 		{
 			name:         "LegacyOptVerifyAll",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-all.sif"),
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyLegacy(), OptVerifyAll()},
+			opts:         []VerifyOpt{OptVerifyLegacy(), OptVerifyAll()},
 			wantVerified: [][]uint32{{1}, {2}},
 			wantEntity:   e,
 		},
 		{
 			name:         "LegacyOptVerifyGroup",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-group.sif"),
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyLegacy(), OptVerifyGroup(1)},
+			opts:         []VerifyOpt{OptVerifyLegacy(), OptVerifyGroup(1)},
 			wantVerified: [][]uint32{{1, 2}},
 			wantEntity:   e,
 		},
@@ -368,9 +365,6 @@ func TestVerifyFingerPrint(t *testing.T) {
 	s := httptest.NewServer(mockHKP{e: e})
 	defer s.Close()
 
-	// Create an option that points to the mock HKP server.
-	var keyServerOpt VerifyOpt
-
 	tests := []struct {
 		name         string
 		path         string
@@ -384,42 +378,42 @@ func TestVerifyFingerPrint(t *testing.T) {
 			name:         "SignatureNotFound",
 			path:         filepath.Join("testdata", "images", "one-group.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt},
+			opts:         []VerifyOpt{},
 			wantErr:      &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:         "SignatureNotFoundNonLegacy",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyLegacy()},
+			opts:         []VerifyOpt{OptVerifyLegacy()},
 			wantErr:      &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:         "SignatureNotFoundLegacy",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt},
+			opts:         []VerifyOpt{},
 			wantErr:      &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:         "SignatureNotFoundLegacyAll",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-all.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt},
+			opts:         []VerifyOpt{},
 			wantErr:      &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:         "SignatureNotFoundLegacyGroup",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-group.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt},
+			opts:         []VerifyOpt{},
 			wantErr:      &integrity.SignatureNotFoundError{},
 		},
 		{
 			name:         "Defaults",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt},
+			opts:         []VerifyOpt{},
 			wantVerified: [][]uint32{{1, 2}},
 			wantEntity:   e,
 		},
@@ -427,7 +421,7 @@ func TestVerifyFingerPrint(t *testing.T) {
 			name:         "OptVerifyGroup",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyGroup(1)},
+			opts:         []VerifyOpt{OptVerifyGroup(1)},
 			wantVerified: [][]uint32{{1, 2}},
 			wantEntity:   e,
 		},
@@ -435,7 +429,7 @@ func TestVerifyFingerPrint(t *testing.T) {
 			name:         "OptVerifyObject",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyObject(1)},
+			opts:         []VerifyOpt{OptVerifyObject(1)},
 			wantVerified: [][]uint32{{1}},
 			wantEntity:   e,
 		},
@@ -443,7 +437,7 @@ func TestVerifyFingerPrint(t *testing.T) {
 			name:         "LegacyDefaults",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyLegacy()},
+			opts:         []VerifyOpt{OptVerifyLegacy()},
 			wantVerified: [][]uint32{{2}},
 			wantEntity:   e,
 		},
@@ -451,7 +445,7 @@ func TestVerifyFingerPrint(t *testing.T) {
 			name:         "LegacyOptVerifyObject",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-all.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyLegacy(), OptVerifyObject(1)},
+			opts:         []VerifyOpt{OptVerifyLegacy(), OptVerifyObject(1)},
 			wantVerified: [][]uint32{{1}},
 			wantEntity:   e,
 		},
@@ -459,7 +453,7 @@ func TestVerifyFingerPrint(t *testing.T) {
 			name:         "LegacyOptVerifyAll",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-all.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyLegacy(), OptVerifyAll()},
+			opts:         []VerifyOpt{OptVerifyLegacy(), OptVerifyAll()},
 			wantVerified: [][]uint32{{1}, {2}},
 			wantEntity:   e,
 		},
@@ -467,7 +461,7 @@ func TestVerifyFingerPrint(t *testing.T) {
 			name:         "LegacyOptVerifyGroup",
 			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-group.sif"),
 			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt, OptVerifyLegacy(), OptVerifyGroup(1)},
+			opts:         []VerifyOpt{OptVerifyLegacy(), OptVerifyGroup(1)},
 			wantVerified: [][]uint32{{1, 2}},
 			wantEntity:   e,
 		},
@@ -475,7 +469,7 @@ func TestVerifyFingerPrint(t *testing.T) {
 			name:         "SingleFingerprintWrong",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
 			fingerprints: []string{invalidFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt},
+			opts:         []VerifyOpt{},
 			wantVerified: [][]uint32{{1, 2}},
 			wantEntity:   e,
 			wantErr:      errNotSignedByRequired,
@@ -484,7 +478,7 @@ func TestVerifyFingerPrint(t *testing.T) {
 			name:         "MultipleFingerprintOneWrong",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
 			fingerprints: []string{testFingerPrint, invalidFingerPrint},
-			opts:         []VerifyOpt{keyServerOpt},
+			opts:         []VerifyOpt{},
 			wantVerified: [][]uint32{{1, 2}},
 			wantEntity:   e,
 			wantErr:      errNotSignedByRequired,
