@@ -18,9 +18,7 @@ require (
 	github.com/cyphar/filepath-securejoin v0.2.3
 	github.com/docker/docker v20.10.11+incompatible
 	github.com/fatih/color v1.13.0
-	github.com/go-log/log v0.2.0
 	github.com/google/uuid v1.3.0
-	github.com/gorilla/websocket v1.4.2
 	github.com/kr/pty v1.1.8
 	github.com/moby/sys/mount v0.3.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0
