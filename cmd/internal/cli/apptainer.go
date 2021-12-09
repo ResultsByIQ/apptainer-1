@@ -25,7 +25,6 @@ import (
 	"github.com/apptainer/apptainer/docs"
 	"github.com/apptainer/apptainer/internal/pkg/buildcfg"
 	"github.com/apptainer/apptainer/internal/pkg/plugin"
-	"github.com/apptainer/apptainer/internal/pkg/remote"
 	"github.com/apptainer/apptainer/internal/pkg/remote/endpoint"
 	"github.com/apptainer/apptainer/internal/pkg/util/fs"
 	"github.com/apptainer/apptainer/pkg/cmdline"
@@ -489,65 +488,6 @@ var VersionCmd = &cobra.Command{
 
 	Use:   "version",
 	Short: "Show the version for Apptainer",
-}
-
-func loadRemoteConf(filepath string) (*remote.Config, error) {
-	f, err := os.OpenFile(filepath, os.O_RDONLY, 0o600)
-	if err != nil {
-		return nil, fmt.Errorf("while opening remote config file: %s", err)
-	}
-	defer f.Close()
-
-	c, err := remote.ReadFrom(f)
-	if err != nil {
-		return nil, fmt.Errorf("while parsing remote config data: %s", err)
-	}
-
-	return c, nil
-}
-
-// sylabsRemote returns the remote in use or an error
-func sylabsRemote() (*endpoint.Config, error) {
-	var c *remote.Config
-
-	// try to load both remotes, check for errors, sync if both exist,
-	// if neither exist return errNoDefault to return to old auth behavior
-	cSys, sysErr := loadRemoteConf(remote.SystemConfigPath)
-	cUsr, usrErr := loadRemoteConf(syfs.RemoteConf())
-	if sysErr != nil && usrErr != nil {
-		return endpoint.DefaultEndpointConfig, nil
-	} else if sysErr != nil {
-		c = cUsr
-	} else if usrErr != nil {
-		c = cSys
-	} else {
-		// sync cUsr with system config cSys
-		if err := cUsr.SyncFrom(cSys); err != nil {
-			return nil, err
-		}
-		c = cUsr
-	}
-
-	ep, err := c.GetDefault()
-	if err == remote.ErrNoDefault {
-		// all remotes have been deleted, fix that by returning
-		// the default remote endpoint to avoid side effects when
-		// pulling from library or with remote build
-		if len(c.Remotes) == 0 {
-			return endpoint.DefaultEndpointConfig, nil
-		}
-		// otherwise notify users about available endpoints and
-		// invite them to select one of them
-		help := "use 'apptainer remote use <endpoint>', available endpoints are: "
-		endpoints := make([]string, 0, len(c.Remotes))
-		for name := range c.Remotes {
-			endpoints = append(endpoints, name)
-		}
-		help += strings.Join(endpoints, ", ")
-		return nil, fmt.Errorf("no default endpoint set: %s", help)
-	}
-
-	return ep, err
 }
 
 func apptainerExec(image string, args []string) (string, error) {

@@ -11,10 +11,11 @@ package endpoint
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/apptainer/apptainer/internal/pkg/remote/credential"
 	remoteutil "github.com/apptainer/apptainer/internal/pkg/remote/util"
 	"github.com/apptainer/apptainer/pkg/sylog"
-	"net/http"
 )
 
 // KeyserverOp represents a keyserver operation type.

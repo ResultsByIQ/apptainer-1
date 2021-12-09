@@ -286,8 +286,7 @@ func TestRootAuthorizedOwner(t *testing.T) {
 			owners:     []string{"root"},
 			shouldPass: true,
 		},
-		*/
-		{
+		*/ {
 			name:       "invalid root",
 			privileged: true,
 			owners:     []string{"foobar"},

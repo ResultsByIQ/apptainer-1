@@ -18,11 +18,8 @@ import (
 	"github.com/apptainer/apptainer/docs"
 	"github.com/apptainer/apptainer/internal/pkg/util/fs"
 	"github.com/apptainer/apptainer/internal/pkg/util/interactive"
-	"github.com/apptainer/apptainer/pkg/build/types"
-	"github.com/apptainer/apptainer/pkg/build/types/parser"
 	"github.com/apptainer/apptainer/pkg/cmdline"
 	"github.com/apptainer/apptainer/pkg/image"
-	"github.com/apptainer/apptainer/pkg/sylog"
 	ocitypes "github.com/containers/image/v5/types"
 	"github.com/spf13/cobra"
 )
@@ -400,48 +397,6 @@ func checkBuildTarget(path string) error {
 		return fmt.Errorf("could not update sandbox %s: doesn't exist", abspath)
 	}
 	return nil
-}
-
-// definitionFromSpec is specifically for parsing specs for the remote builder
-// it uses a different version the the definition struct and parser
-func definitionFromSpec(spec string) (types.Definition, error) {
-	// Try spec as URI first
-	def, err := types.NewDefinitionFromURI(spec)
-	if err == nil {
-		return def, nil
-	}
-
-	// Try spec as local file
-	var isValid bool
-	isValid, err = parser.IsValidDefinition(spec)
-	if err != nil {
-		return types.Definition{}, err
-	}
-
-	if isValid {
-		sylog.Debugf("Found valid definition: %s\n", spec)
-		// File exists and contains valid definition
-		var defFile *os.File
-		defFile, err = os.Open(spec)
-		if err != nil {
-			return types.Definition{}, err
-		}
-
-		defer defFile.Close()
-
-		return parser.ParseDefinitionFile(defFile)
-	}
-
-	// File exists and does NOT contain a valid definition
-	// local image or sandbox
-	def = types.Definition{
-		Header: map[string]string{
-			"bootstrap": "localimage",
-			"from":      spec,
-		},
-	}
-
-	return def, nil
 }
 
 // makeDockerCredentials creates an *ocitypes.DockerAuthConfig to use for

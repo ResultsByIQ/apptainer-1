@@ -19,10 +19,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"syscall"
-	"time"
 
 	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/ProtonMail/go-crypto/openpgp/armor"
@@ -69,20 +67,6 @@ type GenKeyPairOptions struct {
 	Comment   string
 	Password  string
 	KeyLength int
-}
-
-// mrKeyList contains all the key info, used for decoding
-// the MR output from 'key search'
-type mrKeyList struct {
-	keyFingerprint string
-	keyBit         string
-	keyName        string
-	keyType        string
-	keyDateCreated string
-	keyDateExpired string
-	keyStatus      string
-	keyCount       int
-	keyReady       bool
 }
 
 func (e *KeyExistsError) Error() string {
@@ -555,50 +539,6 @@ func SelectPrivKey(el openpgp.EntityList) (*openpgp.Entity, error) {
 	}
 
 	return el[n], nil
-}
-
-// getEncryptionAlgorithmName obtains the algorithm name for key encryption
-func getEncryptionAlgorithmName(n string) (string, error) {
-	algorithmName := ""
-
-	code, err := strconv.ParseInt(n, 10, 64)
-	if err != nil {
-		return "", err
-	}
-	switch code {
-
-	case 1, 2, 3:
-		algorithmName = "RSA"
-	case 16:
-		algorithmName = "Elgamal"
-	case 17:
-		algorithmName = "DSA"
-	case 18:
-		algorithmName = "Elliptic Curve"
-	case 19:
-		algorithmName = "ECDSA"
-	case 20:
-		algorithmName = "Reserved"
-	case 21:
-		algorithmName = "Diffie-Hellman"
-	default:
-		algorithmName = "unknown"
-	}
-	return algorithmName, nil
-}
-
-// function to obtain a date format from linux epoch time
-func date(s string) string {
-	if s == "" {
-		return "[ultimate]"
-	}
-	if s == "none" {
-		return s
-	}
-	c, _ := strconv.ParseInt(s, 10, 64)
-	ret := time.Unix(c, 0).String()
-
-	return ret
 }
 
 func serializeEntity(e *openpgp.Entity, blockType string) (string, error) {
