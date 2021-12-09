@@ -10,11 +10,12 @@
 package cli
 
 import (
+	"runtime"
+
 	"github.com/apptainer/apptainer/docs"
 	"github.com/apptainer/apptainer/pkg/cmdline"
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/spf13/cobra"
-	"runtime"
 )
 
 func init() {

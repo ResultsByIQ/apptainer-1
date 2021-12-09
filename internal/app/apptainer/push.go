@@ -12,11 +12,12 @@ package apptainer
 import (
 	"errors"
 	"fmt"
+	"io"
+	"os"
+
 	"github.com/apptainer/sif/v2/pkg/sif"
 	"github.com/vbauerster/mpb/v4"
 	"github.com/vbauerster/mpb/v4/decor"
-	"io"
-	"os"
 )
 
 // ErrLibraryUnsigned indicated that the image intended to be used is

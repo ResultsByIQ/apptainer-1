@@ -11,6 +11,7 @@ package sypgp
 
 import (
 	"context"
+
 	"github.com/ProtonMail/go-crypto/openpgp"
 )
 

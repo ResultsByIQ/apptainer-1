@@ -10,10 +10,11 @@
 package cli
 
 import (
+	"os"
+
 	"github.com/apptainer/apptainer/docs"
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 // KeyPushCmd is `apptainer key list' and lists local store OpenPGP keys

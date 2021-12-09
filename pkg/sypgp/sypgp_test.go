@@ -11,12 +11,13 @@ package sypgp
 
 import (
 	"bytes"
-	"github.com/apptainer/apptainer/internal/pkg/test"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/apptainer/apptainer/internal/pkg/test"
 
 	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/ProtonMail/go-crypto/openpgp/packet"
