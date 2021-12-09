@@ -18,9 +18,6 @@ import (
 	"github.com/apptainer/apptainer/pkg/sylog"
 	useragent "github.com/apptainer/apptainer/pkg/util/user-agent"
 	golog "github.com/go-log/log"
-	buildclient "github.com/sylabs/scs-build-client/client"
-	keyclient "github.com/sylabs/scs-key-client/client"
-	libclient "github.com/sylabs/scs-library-client/client"
 )
 
 func (ep *Config) KeyserverClientOpts(uri string, op KeyserverOp) ([]keyclient.Option, error) {

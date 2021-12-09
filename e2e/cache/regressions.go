@@ -16,7 +16,6 @@ import (
 
 	"github.com/apptainer/apptainer/e2e/internal/e2e"
 	"github.com/apptainer/apptainer/internal/pkg/util/fs"
-	"github.com/sylabs/scs-library-client/client"
 )
 
 // issue5097 - need to handle an existing directory entry present in the cache

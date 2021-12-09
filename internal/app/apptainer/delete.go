@@ -12,8 +12,6 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
-	"github.com/sylabs/scs-library-client/client"
-	scs "github.com/sylabs/scs-library-client/client"
 )
 
 // DeleteImage deletes an image from a remote library.

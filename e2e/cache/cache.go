@@ -17,7 +17,6 @@ import (
 	"github.com/apptainer/apptainer/e2e/internal/testhelper"
 	"github.com/apptainer/apptainer/internal/pkg/cache"
 	"github.com/apptainer/apptainer/internal/pkg/util/fs"
-	"github.com/sylabs/scs-library-client/client"
 )
 
 type cacheTests struct {

@@ -30,8 +30,6 @@ import (
 	golog "github.com/go-log/log"
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
-	buildclient "github.com/sylabs/scs-build-client/client"
-	client "github.com/sylabs/scs-library-client/client"
 )
 
 // RemoteBuilder contains the build request and response

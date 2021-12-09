@@ -36,7 +36,6 @@ import (
 	"github.com/apptainer/apptainer/internal/pkg/util/interactive"
 	"github.com/apptainer/apptainer/pkg/syfs"
 	"github.com/apptainer/apptainer/pkg/sylog"
-	"github.com/sylabs/scs-key-client/client"
 )
 
 const (

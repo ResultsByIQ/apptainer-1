@@ -13,7 +13,6 @@ import (
 
 	"github.com/apptainer/apptainer/internal/app/apptainer"
 	"github.com/apptainer/apptainer/pkg/sylog"
-	scskeyclient "github.com/sylabs/scs-key-client/client"
 )
 
 // checkSIFFingerprint checks whether a bootstrap SIF image verifies, and was signed with a specified fingerprint

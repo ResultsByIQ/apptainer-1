@@ -22,9 +22,6 @@ import (
 	"github.com/apptainer/apptainer/internal/pkg/client"
 	"github.com/apptainer/apptainer/internal/pkg/util/fs"
 	"github.com/apptainer/apptainer/pkg/sylog"
-	keyclient "github.com/sylabs/scs-key-client/client"
-	libclient "github.com/sylabs/scs-library-client/client"
-	scslibrary "github.com/sylabs/scs-library-client/client"
 	"golang.org/x/term"
 )
 

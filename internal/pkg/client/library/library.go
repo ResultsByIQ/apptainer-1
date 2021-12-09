@@ -19,8 +19,6 @@ import (
 	"github.com/apptainer/apptainer/internal/pkg/buildcfg"
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/apptainer/apptainer/pkg/util/apptainerconf"
-
-	scslibrary "github.com/sylabs/scs-library-client/client"
 )
 
 const defaultTag = "latest"

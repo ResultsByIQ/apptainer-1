@@ -21,7 +21,6 @@ import (
 	"github.com/apptainer/apptainer/pkg/sypgp"
 	"github.com/apptainer/sif/v2/pkg/integrity"
 	"github.com/apptainer/sif/v2/pkg/sif"
-	"github.com/sylabs/scs-key-client/client"
 )
 
 // TODO - error overlaps with ECL - should probably become part of a common errors package at some point.

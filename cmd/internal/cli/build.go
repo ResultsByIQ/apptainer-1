@@ -26,9 +26,6 @@ import (
 	"github.com/apptainer/apptainer/pkg/sylog"
 	ocitypes "github.com/containers/image/v5/types"
 	"github.com/spf13/cobra"
-	scsbuildclient "github.com/sylabs/scs-build-client/client"
-	scskeyclient "github.com/sylabs/scs-key-client/client"
-	scslibclient "github.com/sylabs/scs-library-client/client"
 )
 
 var buildArgs struct {

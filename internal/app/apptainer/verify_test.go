@@ -22,7 +22,6 @@ import (
 	"github.com/ProtonMail/go-crypto/openpgp/armor"
 	"github.com/apptainer/sif/v2/pkg/integrity"
 	"github.com/apptainer/sif/v2/pkg/sif"
-	"github.com/sylabs/scs-key-client/client"
 )
 
 const (

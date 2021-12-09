@@ -19,7 +19,6 @@ import (
 	"github.com/apptainer/apptainer/internal/pkg/client/library"
 	"github.com/apptainer/apptainer/pkg/build/types"
 	"github.com/apptainer/apptainer/pkg/sylog"
-	"github.com/sylabs/scs-library-client/client"
 )
 
 // LibraryConveyorPacker only needs to hold a packer to pack the image it pulls

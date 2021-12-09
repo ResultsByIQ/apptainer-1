@@ -16,7 +16,6 @@ import (
 
 	"github.com/apptainer/apptainer/e2e/internal/e2e"
 	"github.com/apptainer/apptainer/e2e/internal/testhelper"
-	"github.com/sylabs/scs-library-client/client"
 )
 
 type ctx struct {

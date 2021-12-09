@@ -21,7 +21,6 @@ import (
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/apptainer/apptainer/pkg/sypgp"
 	"github.com/spf13/cobra"
-	"github.com/sylabs/scs-key-client/client"
 )
 
 // KeyPushCmd is `apptainer key list' and lists local store OpenPGP keys

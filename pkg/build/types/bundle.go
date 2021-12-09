@@ -20,7 +20,6 @@ import (
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/apptainer/apptainer/pkg/util/cryptkey"
 	ocitypes "github.com/containers/image/v5/types"
-	scskeyclient "github.com/sylabs/scs-key-client/client"
 	"golang.org/x/sys/unix"
 )
 

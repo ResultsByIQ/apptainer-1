@@ -18,7 +18,6 @@ import (
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/apptainer/apptainer/pkg/sypgp"
 	"github.com/spf13/cobra"
-	"github.com/sylabs/scs-key-client/client"
 )
 
 // KeySearchCmd is 'apptainer key search' and look for public keys from a key server

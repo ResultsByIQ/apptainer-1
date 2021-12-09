@@ -21,8 +21,6 @@ import (
 	"github.com/apptainer/apptainer/internal/pkg/util/fs"
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/apptainer/sif/v2/pkg/sif"
-	keyclient "github.com/sylabs/scs-key-client/client"
-	"github.com/sylabs/scs-library-client/client"
 	"github.com/vbauerster/mpb/v4"
 	"github.com/vbauerster/mpb/v4/decor"
 	"golang.org/x/term"

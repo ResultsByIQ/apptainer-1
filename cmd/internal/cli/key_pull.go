@@ -20,7 +20,6 @@ import (
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/apptainer/apptainer/pkg/sypgp"
 	"github.com/spf13/cobra"
-	"github.com/sylabs/scs-key-client/client"
 )
 
 // KeyPullCmd is `apptainer key pull' and fetches public keys from a key server
