@@ -12,7 +12,6 @@ package cli
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"os"
 	osExec "os/exec"
 	"runtime"
@@ -23,7 +22,6 @@ import (
 	"github.com/apptainer/apptainer/internal/pkg/build"
 	"github.com/apptainer/apptainer/internal/pkg/buildcfg"
 	"github.com/apptainer/apptainer/internal/pkg/cache"
-	"github.com/apptainer/apptainer/internal/pkg/remote/endpoint"
 	fakerootConfig "github.com/apptainer/apptainer/internal/pkg/runtime/engine/fakeroot/config"
 	"github.com/apptainer/apptainer/internal/pkg/util/fs"
 	"github.com/apptainer/apptainer/internal/pkg/util/interactive"
@@ -154,114 +152,8 @@ func runBuild(cmd *cobra.Command, args []string) {
 		sylog.Fatalf("While checking build target: %s", err)
 	}
 
-	if buildArgs.remote {
-		runBuildRemote(cmd.Context(), cmd, dest, spec)
-	} else {
-		runBuildLocal(cmd.Context(), cmd, dest, spec)
-	}
+	runBuildLocal(cmd.Context(), cmd, dest, spec)
 	sylog.Infof("Build complete: %s", dest)
-}
-
-func runBuildRemote(ctx context.Context, cmd *cobra.Command, dst, spec string) {
-	// building encrypted containers on the remote builder is not currently supported
-	if buildArgs.encrypt {
-		sylog.Fatalf("Building encrypted container with the remote builder is not currently supported.")
-	}
-
-	// TODO - the keyserver config needs to go to the remote builder for fingerprint verification at
-	// build time to be fully supported.
-	bc, lc, _, err := getServiceConfigs(buildArgs.builderURL, buildArgs.libraryURL, buildArgs.keyServerURL)
-	if err != nil {
-		sylog.Fatalf("Unable to get builder and library client configuration: %v", err)
-	}
-	buildArgs.libraryURL = lc.BaseURL
-	buildArgs.builderURL = bc.BaseURL
-
-	// To provide a web link to detached remote builds we need to know the web frontend URI.
-	// We only know this working forward from a remote config, and not if the user has set custom
-	// service URLs, since there is no straightforward foolproof way to work back from them to a
-	// matching frontend URL.
-	if !cmd.Flag("builder").Changed && !cmd.Flag("library").Changed {
-		buildArgs.webURL = URI()
-	}
-
-	// submitting a remote build requires a valid authToken
-	if bc.AuthToken == "" {
-		sylog.Fatalf("Unable to submit build job: %v", remoteWarning)
-	}
-
-	def, err := definitionFromSpec(spec)
-	if err != nil {
-		sylog.Fatalf("Unable to build from %s: %v", spec, err)
-	}
-
-	// path SIF from remote builder should be placed
-	rbDst := dst
-	if buildArgs.sandbox {
-		if strings.HasPrefix(dst, "library://") {
-			// image destination is the library.
-			sylog.Fatalf("Library URI detected as destination, sandbox builds are incompatible with library destinations.")
-		}
-
-		// create temporary file to download sif
-		f, err := ioutil.TempFile(tmpDir, "remote-build-")
-		if err != nil {
-			sylog.Fatalf("Could not create temporary directory: %s", err)
-		}
-		f.Close()
-
-		// override remote build destation to temporary file for conversion to a sandbox
-		rbDst = f.Name()
-		sylog.Debugf("Overriding remote build destination to temporary file: %s", rbDst)
-
-		// remove downloaded sif
-		defer os.Remove(rbDst)
-
-		// build from sif downloaded in tmp location
-		defer func() {
-			sylog.Debugf("Building sandbox from downloaded SIF")
-			imgCache := getCacheHandle(cache.Config{Disable: disableCache})
-			if imgCache == nil {
-				sylog.Fatalf("failed to create an image cache handle")
-			}
-
-			d, err := types.NewDefinitionFromURI("localimage" + "://" + rbDst)
-			if err != nil {
-				sylog.Fatalf("Unable to create definition for sandbox build: %v", err)
-			}
-
-			b, err := build.New(
-				[]types.Definition{d},
-				build.Config{
-					Dest:      dst,
-					Format:    "sandbox",
-					NoCleanUp: buildArgs.noCleanUp,
-					Opts: types.Options{
-						ImgCache: imgCache,
-						NoCache:  disableCache,
-						TmpDir:   tmpDir,
-						Update:   buildArgs.update,
-						Force:    forceOverwrite,
-					},
-				})
-			if err != nil {
-				sylog.Fatalf("Unable to create build: %v", err)
-			}
-
-			if err = b.Full(ctx); err != nil {
-				sylog.Fatalf("While performing build: %v", err)
-			}
-		}()
-	}
-
-	b, err := remotebuilder.New(rbDst, buildArgs.libraryURL, def, buildArgs.detached, forceOverwrite, buildArgs.builderURL, bc.AuthToken, buildArgs.arch, buildArgs.webURL)
-	if err != nil {
-		sylog.Fatalf("Failed to create builder: %v", err)
-	}
-	err = b.Build(ctx)
-	if err != nil {
-		sylog.Fatalf("While performing build: %v", err)
-	}
 }
 
 func runBuildLocal(ctx context.Context, cmd *cobra.Command, dst, spec string) {
@@ -309,32 +201,6 @@ func runBuildLocal(ctx context.Context, cmd *cobra.Command, dst, spec string) {
 		sylog.Fatalf("Unable to build from %s: %v", spec, err)
 	}
 
-	hasLibrary := false
-
-	// only resolve remote endpoints if library is a build source
-	for _, d := range defs {
-		if d.Header["bootstrap"] == "library" {
-			hasLibrary = true
-			break
-		}
-	}
-
-	authToken := ""
-
-	if hasLibrary {
-		lc, err := getLibraryClientConfig(buildArgs.libraryURL)
-		if err != nil {
-			sylog.Fatalf("Unable to get library client configuration: %v", err)
-		}
-		buildArgs.libraryURL = lc.BaseURL
-		authToken = lc.AuthToken
-	}
-
-	co, err := getKeyserverClientOpts(buildArgs.keyServerURL, endpoint.KeyserverVerifyOp)
-	if err != nil {
-		sylog.Fatalf("Unable to get key server client configuration: %v", err)
-	}
-
 	buildFormat := "sif"
 	sandboxTarget := false
 	if buildArgs.sandbox {
@@ -358,9 +224,6 @@ func runBuildLocal(ctx context.Context, cmd *cobra.Command, dst, spec string) {
 				Sections:          buildArgs.sections,
 				NoTest:            buildArgs.noTest,
 				NoHTTPS:           noHTTPS,
-				LibraryURL:        buildArgs.libraryURL,
-				LibraryAuthToken:  authToken,
-				KeyServerOpts:     co,
 				DockerAuthConfig:  authConf,
 				EncryptionKeyInfo: keyInfo,
 				FixPerms:          buildArgs.fixPerms,
