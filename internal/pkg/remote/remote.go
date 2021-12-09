@@ -29,21 +29,6 @@ import (
 // ErrNoDefault indicates no default remote being set
 var ErrNoDefault = errors.New("no default remote")
 
-const (
-	// DefaultRemoteName is the default remote name
-	DefaultRemoteName = "SylabsCloud"
-)
-
-// DefaultRemoteConfig holds the default remote configuration
-// if there is no remote.yaml present both in user home directory
-// and in system location.
-var DefaultRemoteConfig = &Config{
-	DefaultRemote: DefaultRemoteName,
-	Remotes: map[string]*endpoint.Config{
-		DefaultRemoteName: endpoint.DefaultEndpointConfig,
-	},
-}
-
 // SystemConfigPath holds the path to the remote system configuration.
 var SystemConfigPath = filepath.Join(buildcfg.SYSCONFDIR, "apptainer", syfs.RemoteConfFile)
 
