@@ -223,13 +223,3 @@ var defaultClient = &http.Client{
 		TLSClientConfig: &tls.Config{},
 	},
 }
-
-func newClient(keyservers []*ServiceConfig, op KeyserverOp) *http.Client {
-	return &http.Client{
-		Transport: &keyserverTransport{
-			keyservers: keyservers,
-			op:         op,
-			client:     defaultClient,
-		},
-	}
-}

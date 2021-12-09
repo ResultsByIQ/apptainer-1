@@ -15,7 +15,6 @@ import (
 	"os"
 
 	"github.com/apptainer/apptainer/docs"
-	"github.com/apptainer/apptainer/internal/pkg/remote/endpoint"
 	"github.com/apptainer/apptainer/internal/pkg/util/interactive"
 	"github.com/apptainer/apptainer/pkg/cmdline"
 	"github.com/apptainer/apptainer/pkg/sylog"
@@ -102,7 +101,7 @@ func runNewPairCmd(cmd *cobra.Command, args []string) {
 	opts.KeyLength = keyNewpairBitLength
 
 	fmt.Printf("Generating Entity and OpenPGP Key Pair... ")
-	key, err := keyring.GenKeyPair(opts.GenKeyPairOptions)
+	_, err = keyring.GenKeyPair(opts.GenKeyPairOptions)
 	if err != nil {
 		sylog.Errorf("creating newpair failed: %v", err)
 		os.Exit(2)
@@ -111,18 +110,6 @@ func runNewPairCmd(cmd *cobra.Command, args []string) {
 
 	if !opts.PushToKeyStore {
 		return
-	}
-
-	// Only connect to the endpoint if we are pushing the key.
-	co, err := getKeyserverClientOpts(keyServerURI, endpoint.KeyserverPushOp)
-	if err != nil {
-		sylog.Fatalf("Keyserver client failed: %s", err)
-	}
-
-	if err := sypgp.PushPubkey(cmd.Context(), key, co...); err != nil {
-		fmt.Printf("Failed to push newly created key to keystore: %s\n", err)
-	} else {
-		fmt.Println("Key successfully pushed to keystore")
 	}
 }
 

@@ -88,23 +88,6 @@ func (c ctx) pullTestImage(t *testing.T) string {
 	return imgPath
 }
 
-func ls(t *testing.T, dir string) {
-	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			t.Logf("W: skipping path %q due to error: %v\n", path, err)
-			return err
-		}
-
-		t.Logf("%-20d  %s  %s\n", info.Size(), info.Mode(), path)
-
-		return nil
-	})
-	if err != nil {
-		t.Logf("E: error walking the path %q: %v\n", dir, err)
-		return
-	}
-}
-
 func (c ctx) testApptainerDisableCache(t *testing.T) {
 	// Test plan:
 	//

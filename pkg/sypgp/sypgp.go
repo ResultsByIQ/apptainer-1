@@ -22,7 +22,6 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
-	"text/tabwriter"
 	"time"
 
 	"github.com/ProtonMail/go-crypto/openpgp"
@@ -32,16 +31,6 @@ import (
 	"github.com/apptainer/apptainer/internal/pkg/util/interactive"
 	"github.com/apptainer/apptainer/pkg/syfs"
 	"github.com/apptainer/apptainer/pkg/sylog"
-)
-
-const (
-	helpAuth = `Access token is expired or missing. To update or obtain a token:
-  1) View configured remotes using "apptainer remote list"
-  2) Identify default remote. It will be listed with square brackets.
-  3) Login to default remote with "apptainer remote login <RemoteName>"
-`
-	helpPush = `  4) Push key using "apptainer key push %[1]X"
-`
 )
 
 var (
@@ -98,11 +87,6 @@ type mrKeyList struct {
 
 func (e *KeyExistsError) Error() string {
 	return fmt.Sprintf("the key with fingerprint %X already belongs to the keyring", e.fingerprint)
-}
-
-// GetTokenFile returns a string describing the path to the stored token file
-func GetTokenFile() string {
-	return filepath.Join(syfs.ConfigDir(), "sylabs-token")
 }
 
 // dirPath returns a string describing the path to the sypgp home folder
@@ -308,11 +292,6 @@ func printEntities(w io.Writer, entities openpgp.EntityList) {
 		printEntity(w, i, e)
 		fmt.Fprint(w, "   --------\n")
 	}
-}
-
-// PrintEntity pretty prints an entity entry
-func PrintEntity(index int, e *openpgp.Entity) {
-	printEntity(os.Stdout, index, e)
 }
 
 // PrintPubKeyring prints the public keyring read from the public local store
@@ -540,20 +519,6 @@ func (keyring *Handle) GenKeyPair(opts GenKeyPairOptions) (*openpgp.Entity, erro
 	return entity, nil
 }
 
-// DecryptKey decrypts a private key provided a pass phrase.
-func DecryptKey(k *openpgp.Entity, message string) error {
-	if message == "" {
-		message = "Enter key passphrase : "
-	}
-
-	pass, err := interactive.AskQuestionNoEcho(message)
-	if err != nil {
-		return err
-	}
-
-	return k.PrivateKey.Decrypt([]byte(pass))
-}
-
 // EncryptKey encrypts a private key using a pass phrase
 func EncryptKey(k *openpgp.Entity, pass string) error {
 	if k.PrivateKey.Encrypted {
@@ -590,56 +555,6 @@ func SelectPrivKey(el openpgp.EntityList) (*openpgp.Entity, error) {
 	}
 
 	return el[n], nil
-}
-
-// formatMROutput will take a machine readable input, and convert it to fit
-// on a 80x24 terminal. Returns the number of keys(int), the formated string
-// in []bytes, and a error if one occurs.
-func formatMROutput(mrString string) (int, []byte, error) {
-	count := 0
-	keyNum := 0
-	listLine := "%s\t%s\t%s\n"
-
-	retList := bytes.NewBuffer(nil)
-	tw := tabwriter.NewWriter(retList, 0, 0, 2, ' ', 0)
-	fmt.Fprintf(tw, listLine, "KEY ID", "BITS", "NAME/EMAIL")
-
-	key := strings.Split(mrString, "\n")
-
-	for _, k := range key {
-		nk := strings.Split(k, ":")
-		for _, n := range nk {
-			if n == "info" {
-				var err error
-				keyNum, err = strconv.Atoi(nk[2])
-				if err != nil {
-					return -1, nil, fmt.Errorf("unable to check key number")
-				}
-			}
-			if n == "pub" {
-				// The fingerprint is located at nk[1], and we only want the last 8 chars
-				fmt.Fprintf(tw, "%s\t", nk[1][len(nk[1])-8:])
-				// The key size (bits) is located at nk[3]
-				fmt.Fprintf(tw, "%s\t", nk[3])
-				count++
-			}
-			if n == "uid" {
-				// And the key name/email is on nk[1]
-				fmt.Fprintf(tw, "%s\t\n\n", nk[1])
-			}
-		}
-	}
-	tw.Flush()
-
-	sylog.Debugf("key count=%d; expect=%d\n", count, keyNum)
-
-	// Simple check to ensure the conversion was successful
-	if count != keyNum {
-		sylog.Debugf("expecting %d, got %d\n", keyNum, count)
-		return -1, retList.Bytes(), fmt.Errorf("failed to convert machine readable to human readable output correctly")
-	}
-
-	return count, retList.Bytes(), nil
 }
 
 // getEncryptionAlgorithmName obtains the algorithm name for key encryption
@@ -735,53 +650,6 @@ func getKeyInfoFromList(keyList *mrKeyList, lines []string, index string) error 
 	}
 
 	return errRet
-}
-
-// formatMROutputLongList reformats the key search output that is in machine readable format
-// see the output format in: https://tools.ietf.org/html/draft-shaw-openpgp-hkp-00#section-5.2
-func formatMROutputLongList(mrString string) (int, []byte, error) {
-	listLine := "%s\t%s\t%s\t%s\t%s\t%s\t%s\n"
-
-	retList := bytes.NewBuffer(nil)
-	tw := tabwriter.NewWriter(retList, 0, 0, 2, ' ', 0)
-	fmt.Fprintf(tw, listLine, "FINGERPRINT", "ALGORITHM", "BITS", "CREATION DATE", "EXPIRATION DATE", "STATUS", "NAME/EMAIL")
-
-	keyNum := 0
-	key := strings.Split(mrString, "\n")
-	var keyList mrKeyList
-
-	for _, k := range key {
-		nk := strings.Split(k, ":")
-		for _, n := range nk {
-			if n == "info" {
-				var err error
-				keyNum, err = strconv.Atoi(nk[2])
-				if err != nil {
-					return -1, nil, fmt.Errorf("unable to check key number")
-				}
-			}
-			err := getKeyInfoFromList(&keyList, nk, n)
-			if err != nil {
-				return -1, nil, fmt.Errorf("failed to get entity from list: %s", err)
-			}
-		}
-		if keyList.keyReady {
-			fmt.Fprintf(tw, listLine, keyList.keyFingerprint, keyList.keyType, keyList.keyBit, keyList.keyDateCreated, keyList.keyDateExpired, keyList.keyStatus, keyList.keyName)
-			fmt.Fprintf(tw, "\t\t\t\t\t\t\n")
-			keyList = mrKeyList{keyCount: keyList.keyCount}
-		}
-	}
-	tw.Flush()
-
-	sylog.Debugf("key count=%d; expect=%d\n", keyList.keyCount, keyNum)
-
-	// Simple check to ensure the conversion was successful
-	if keyList.keyCount != keyNum {
-		sylog.Debugf("expecting %d, got %d\n", keyNum, keyList.keyCount)
-		return -1, retList.Bytes(), fmt.Errorf("failed to convert machine readable to human readable output correctly")
-	}
-
-	return keyList.keyCount, retList.Bytes(), nil
 }
 
 func serializeEntity(e *openpgp.Entity, blockType string) (string, error) {

@@ -15,7 +15,6 @@ import (
 
 	"github.com/apptainer/apptainer/docs"
 	"github.com/apptainer/apptainer/internal/app/apptainer"
-	"github.com/apptainer/apptainer/internal/pkg/remote/endpoint"
 	"github.com/apptainer/apptainer/pkg/cmdline"
 	"github.com/apptainer/apptainer/pkg/sylog"
 	"github.com/spf13/cobra"
@@ -155,16 +154,6 @@ var VerifyCmd = &cobra.Command{
 
 func doVerifyCmd(cmd *cobra.Command, cpath string) {
 	var opts []apptainer.VerifyOpt
-
-	// Set keyserver option, if applicable.
-	if !localVerify {
-		co, err := getKeyserverClientOpts(keyServerURI, endpoint.KeyserverVerifyOp)
-		if err != nil {
-			sylog.Fatalf("Error while getting keyserver client config: %v", err)
-		}
-
-		opts = append(opts, apptainer.OptVerifyUseKeyServer(co...))
-	}
 
 	// Set group option, if applicable.
 	if cmd.Flag(verifySifGroupIDFlag.Name).Changed || cmd.Flag(verifyOldSifGroupIDFlag.Name).Changed {
