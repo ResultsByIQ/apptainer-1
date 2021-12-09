@@ -16,12 +16,10 @@ import (
 
 	"github.com/apptainer/apptainer/docs"
 	"github.com/apptainer/apptainer/internal/pkg/cache"
-	"github.com/apptainer/apptainer/internal/pkg/client/library"
 	"github.com/apptainer/apptainer/internal/pkg/client/net"
 	"github.com/apptainer/apptainer/internal/pkg/client/oci"
 	"github.com/apptainer/apptainer/internal/pkg/client/oras"
 	"github.com/apptainer/apptainer/internal/pkg/client/shub"
-	"github.com/apptainer/apptainer/internal/pkg/remote/endpoint"
 	"github.com/apptainer/apptainer/internal/pkg/util/uri"
 	"github.com/apptainer/apptainer/pkg/cmdline"
 	"github.com/apptainer/apptainer/pkg/sylog"
@@ -205,44 +203,6 @@ func pullRun(cmd *cobra.Command, args []string) {
 	}
 
 	switch transport {
-	case LibraryProtocol, "":
-		ref, err := library.NormalizeLibraryRef(pullFrom)
-		if err != nil {
-			sylog.Fatalf("Malformed library reference: %v", err)
-		}
-
-		if pullLibraryURI != "" && ref.Host != "" {
-			sylog.Fatalf("Conflicting arguments; do not use --library with a library URI containing host name")
-		}
-
-		var libraryURI string
-		if pullLibraryURI != "" {
-			libraryURI = pullLibraryURI
-		} else if ref.Host != "" {
-			// override libraryURI if ref contains host name
-			if noHTTPS {
-				libraryURI = "http://" + ref.Host
-			} else {
-				libraryURI = "https://" + ref.Host
-			}
-		}
-
-		lc, err := getLibraryClientConfig(libraryURI)
-		if err != nil {
-			sylog.Fatalf("Unable to get library client configuration: %v", err)
-		}
-		co, err := getKeyserverClientOpts("", endpoint.KeyserverVerifyOp)
-		if err != nil {
-			sylog.Fatalf("Unable to get keyserver client configuration: %v", err)
-		}
-
-		_, err = library.PullToFile(ctx, imgCache, pullTo, ref, pullArch, tmpDir, lc, co)
-		if err != nil && err != library.ErrLibraryPullUnsigned {
-			sylog.Fatalf("While pulling library image: %v", err)
-		}
-		if err == library.ErrLibraryPullUnsigned {
-			sylog.Warningf("Skipping container verification")
-		}
 	case ShubProtocol:
 		_, err := shub.PullToFile(ctx, imgCache, pullTo, pullFrom, tmpDir, noHTTPS)
 		if err != nil {
