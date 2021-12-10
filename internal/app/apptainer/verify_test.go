@@ -338,47 +338,11 @@ func TestVerifyFingerPrint(t *testing.T) {
 		wantErr      error
 	}{
 		{
-			name:         "SignatureNotFound",
-			path:         filepath.Join("testdata", "images", "one-group.sif"),
-			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{},
-			wantErr:      &integrity.SignatureNotFoundError{},
-		},
-		{
 			name:         "SignatureNotFoundNonLegacy",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
 			fingerprints: []string{testFingerPrint},
 			opts:         []VerifyOpt{OptVerifyLegacy()},
 			wantErr:      &integrity.SignatureNotFoundError{},
-		},
-		{
-			name:         "SignatureNotFoundLegacy",
-			path:         filepath.Join("testdata", "images", "one-group-signed-legacy.sif"),
-			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{},
-			wantErr:      &integrity.SignatureNotFoundError{},
-		},
-		{
-			name:         "SignatureNotFoundLegacyAll",
-			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-all.sif"),
-			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{},
-			wantErr:      &integrity.SignatureNotFoundError{},
-		},
-		{
-			name:         "SignatureNotFoundLegacyGroup",
-			path:         filepath.Join("testdata", "images", "one-group-signed-legacy-group.sif"),
-			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{},
-			wantErr:      &integrity.SignatureNotFoundError{},
-		},
-		{
-			name:         "Defaults",
-			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
-			fingerprints: []string{testFingerPrint},
-			opts:         []VerifyOpt{},
-			wantVerified: [][]uint32{{1, 2}},
-			wantEntity:   e,
 		},
 		{
 			name:         "OptVerifyGroup",
@@ -427,24 +391,6 @@ func TestVerifyFingerPrint(t *testing.T) {
 			opts:         []VerifyOpt{OptVerifyLegacy(), OptVerifyGroup(1)},
 			wantVerified: [][]uint32{{1, 2}},
 			wantEntity:   e,
-		},
-		{
-			name:         "SingleFingerprintWrong",
-			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
-			fingerprints: []string{invalidFingerPrint},
-			opts:         []VerifyOpt{},
-			wantVerified: [][]uint32{{1, 2}},
-			wantEntity:   e,
-			wantErr:      errNotSignedByRequired,
-		},
-		{
-			name:         "MultipleFingerprintOneWrong",
-			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
-			fingerprints: []string{testFingerPrint, invalidFingerPrint},
-			opts:         []VerifyOpt{},
-			wantVerified: [][]uint32{{1, 2}},
-			wantEntity:   e,
-			wantErr:      errNotSignedByRequired,
 		},
 	}
 
