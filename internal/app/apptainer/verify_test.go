@@ -266,14 +266,14 @@ func TestVerify(t *testing.T) {
 				opts:    []VerifyOpt{},
 				wantErr: &integrity.SignatureNotFoundError{},
 			},
+			{
+				name:         "Defaults",
+				path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
+				opts:         []VerifyOpt{},
+				wantVerified: [][]uint32{{1, 2}},
+				wantEntity:   e,
+			},
 		*/ {
-			name:         "Defaults",
-			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
-			opts:         []VerifyOpt{},
-			wantVerified: [][]uint32{{1, 2}},
-			wantEntity:   e,
-		},
-		{
 			name:         "OptVerifyGroup",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
 			opts:         []VerifyOpt{OptVerifyGroup(1)},
