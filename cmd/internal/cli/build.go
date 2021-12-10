@@ -29,10 +29,6 @@ var buildArgs struct {
 	bindPaths     []string
 	mounts        []string
 	arch          string
-	builderURL    string
-	libraryURL    string
-	keyServerURL  string
-	webURL        string
 	detached      bool
 	encrypt       bool
 	fakeroot      bool
@@ -40,7 +36,6 @@ var buildArgs struct {
 	isJSON        bool
 	noCleanUp     bool
 	noTest        bool
-	remote        bool
 	sandbox       bool
 	update        bool
 	nvidia        bool
@@ -102,17 +97,6 @@ var buildNoTestFlag = cmdline.Flag{
 	EnvKeys:      []string{"NOTEST"},
 }
 
-// -r|--remote
-var buildRemoteFlag = cmdline.Flag{
-	ID:           "buildRemoteFlag",
-	Value:        &buildArgs.remote,
-	DefaultValue: false,
-	Name:         "remote",
-	ShortHand:    "r",
-	Usage:        "build image remotely (does not require root)",
-	EnvKeys:      []string{"REMOTE"},
-}
-
 // --arch
 var buildArchFlag = cmdline.Flag{
 	ID:           "buildArchFlag",
@@ -132,26 +116,6 @@ var buildDetachedFlag = cmdline.Flag{
 	ShortHand:    "d",
 	Usage:        "submit build job and print build ID (no real-time logs and requires --remote)",
 	EnvKeys:      []string{"DETACHED"},
-}
-
-// --builder
-var buildBuilderFlag = cmdline.Flag{
-	ID:           "buildBuilderFlag",
-	Value:        &buildArgs.builderURL,
-	DefaultValue: "",
-	Name:         "builder",
-	Usage:        "remote Build Service URL, setting this implies --remote",
-	EnvKeys:      []string{"BUILDER"},
-}
-
-// --library
-var buildLibraryFlag = cmdline.Flag{
-	ID:           "buildLibraryFlag",
-	Value:        &buildArgs.libraryURL,
-	DefaultValue: "",
-	Name:         "library",
-	Usage:        "container Library URL",
-	EnvKeys:      []string{"LIBRARY"},
 }
 
 // --disable-cache
@@ -275,17 +239,14 @@ func init() {
 		cmdManager.RegisterCmd(buildCmd)
 
 		cmdManager.RegisterFlagForCmd(&buildArchFlag, buildCmd)
-		cmdManager.RegisterFlagForCmd(&buildBuilderFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildDetachedFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildDisableCacheFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildEncryptFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildFakerootFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildFixPermsFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildJSONFlag, buildCmd)
-		cmdManager.RegisterFlagForCmd(&buildLibraryFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildNoCleanupFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildNoTestFlag, buildCmd)
-		cmdManager.RegisterFlagForCmd(&buildRemoteFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildSandboxFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildSectionFlag, buildCmd)
 		cmdManager.RegisterFlagForCmd(&buildUpdateFlag, buildCmd)

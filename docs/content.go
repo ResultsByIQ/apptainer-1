@@ -590,8 +590,6 @@ Enterprise Performance Computing (EPC)`
   http, https: Pull an image using the http(s?) protocol
       https://library.sylabs.io/v1/imagefile/library/default/alpine:latest`
 	PullExample string = `
-  From Sylabs cloud library
-  $ apptainer pull alpine.sif oras://ghcr.io/apptainer/alpine:latest
 
   From Docker
   $ apptainer pull tensorflow.sif docker://tensorflow/tensorflow:latest
@@ -619,6 +617,7 @@ Enterprise Performance Computing (EPC)`
   pushing them to the library. An auth token is required to push to the library,
   so you may need to configure it first with 'apptainer remote'.`
 	PushExample string = `
+
   To supported OCI registry
   $ apptainer push /home/user/my.sif oras://registry/namespace/image:tag`
 

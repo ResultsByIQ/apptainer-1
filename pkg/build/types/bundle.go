@@ -43,10 +43,6 @@ type Options struct {
 	Sections []string `json:"sections"`
 	// TmpDir specifies a non-standard temporary location to perform a build.
 	TmpDir string
-	// LibraryURL contains URL to library where base images can be pulled.
-	LibraryURL string `json:"libraryURL"`
-	// LibraryAuthToken contains authentication token to access specified library.
-	LibraryAuthToken string `json:"libraryAuthToken"`
 	// contains docker credentials if specified.
 	DockerAuthConfig *ocitypes.DockerAuthConfig
 	// EncryptionKeyInfo specifies the key used for filesystem
