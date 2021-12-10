@@ -26,7 +26,6 @@ import (
 
 const (
 	testFingerPrint    = "12045C8C0B1004D058DE4BEDA20C27EE7FF7BA84"
-	invalidFingerPrint = "0000000000000000000000000000000000000000"
 )
 
 // getTestEntity returns a fixed test PGP entity.
