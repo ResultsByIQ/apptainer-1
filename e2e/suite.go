@@ -27,7 +27,6 @@ import (
 	"github.com/apptainer/apptainer/e2e/cache"
 	"github.com/apptainer/apptainer/e2e/cmdenvvars"
 	"github.com/apptainer/apptainer/e2e/config"
-	"github.com/apptainer/apptainer/e2e/delete"
 	"github.com/apptainer/apptainer/e2e/docker"
 	"github.com/apptainer/apptainer/e2e/ecl"
 	apptainerenv "github.com/apptainer/apptainer/e2e/env"
@@ -175,7 +174,6 @@ func Run(t *testing.T) {
 	suite.AddGroup("CACHE", cache.E2ETests)
 	suite.AddGroup("CMDENVVARS", cmdenvvars.E2ETests)
 	suite.AddGroup("CONFIG", config.E2ETests)
-	suite.AddGroup("DELETE", delete.E2ETests)
 	suite.AddGroup("DOCKER", docker.E2ETests)
 	suite.AddGroup("ECL", ecl.E2ETests)
 	suite.AddGroup("ENV", apptainerenv.E2ETests)

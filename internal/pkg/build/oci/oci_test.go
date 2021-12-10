@@ -26,7 +26,7 @@ import (
 )
 
 const (
-	invalidOCIURI = "library://valid_uri_but_not_real_image"
+	invalidOCIURI = "oras://valid_uri_but_not_real_image"
 	invalidHash   = "1n2o3t4e5x6i7s9t0i1n2g3h4a5s6h"
 )
 

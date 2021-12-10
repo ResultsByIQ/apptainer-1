@@ -23,7 +23,7 @@ type cacheTests struct {
 
 const (
 	imgName = "alpine_latest.sif"
-	imgURL  = "library://alpine:latest"
+	imgURL  = "oras://ghcr.io/apptainer/alpine:latest"
 )
 
 func prepTest(t *testing.T, testEnv e2e.TestEnv, testName string, cacheParentDir string, imagePath string) {

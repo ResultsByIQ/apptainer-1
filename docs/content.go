@@ -153,7 +153,7 @@ Enterprise Performance Computing (EPC)`
           $ apptainer build /tmp/debian0.sif /path/to/debian.def
 
       Build a sif image from the Library:
-          $ apptainer build /tmp/debian1.sif library://debian:latest
+          $ apptainer build /tmp/debian1.sif docker://debian:latest
 
       Build a base sandbox from DockerHub, make changes to it, then build sif
           $ apptainer build --sandbox /tmp/debian docker://debian:latest
@@ -339,16 +339,6 @@ Enterprise Performance Computing (EPC)`
   $ apptainer key remove D87FE3AF5C1F063FCBCC9B02F812842B5EEE5934`
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// delete
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	DeleteUse   string = `delete [arch] <imageRef>`
-	DeleteShort string = `Deletes requested image from the library`
-	DeleteLong  string = `
-  The 'delete' command allows you to delete an image from a remote library.`
-	DeleteExample string = `
-  $ apptainer delete --arch=amd64 library://username/project/image:1.0`
-
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// capability
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	CapabilityUse   string = `capability`
@@ -484,7 +474,7 @@ Enterprise Performance Computing (EPC)`
   $ cat hello_world.py | apptainer exec /tmp/debian.sif python
   $ sudo apptainer exec --writable /tmp/debian.sif apt-get update
   $ apptainer exec instance://my_instance ps -ef
-  $ apptainer exec library://centos cat /etc/os-release`
+  $ apptainer exec docker://centos cat /etc/os-release`
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// instance
@@ -588,9 +578,6 @@ Enterprise Performance Computing (EPC)`
   The 'pull' command allows you to download or build a container from a given
   URI. Supported URIs include:
 
-  library: Pull an image from the currently configured library
-      library://user/collection/container[:tag]
-
   docker: Pull a Docker/OCI image from Docker Hub, or another OCI registry.
       docker://user/image:tag
     
@@ -604,7 +591,7 @@ Enterprise Performance Computing (EPC)`
       https://library.sylabs.io/v1/imagefile/library/default/alpine:latest`
 	PullExample string = `
   From Sylabs cloud library
-  $ apptainer pull alpine.sif library://alpine:latest
+  $ apptainer pull alpine.sif oras://ghcr.io/apptainer/alpine:latest
 
   From Docker
   $ apptainer pull tensorflow.sif docker://tensorflow/tensorflow:latest
@@ -624,9 +611,6 @@ Enterprise Performance Computing (EPC)`
   The 'push' command allows you to upload a SIF container to a given
   URI.  Supported URIs include:
 
-  library:
-      library://user/collection/container[:tag]
-
   oras:
       oras://registry/namespace/repo:tag
 
@@ -635,9 +619,6 @@ Enterprise Performance Computing (EPC)`
   pushing them to the library. An auth token is required to push to the library,
   so you may need to configure it first with 'apptainer remote'.`
 	PushExample string = `
-  To Library
-  $ apptainer push /home/user/my.sif library://user/collection/my.sif:latest
-
   To supported OCI registry
   $ apptainer push /home/user/my.sif oras://registry/namespace/image:tag`
 

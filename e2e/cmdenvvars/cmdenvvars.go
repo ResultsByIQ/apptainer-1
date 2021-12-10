@@ -74,7 +74,7 @@ func (c ctx) pullTestImage(t *testing.T) string {
 
 	imgPath := filepath.Join(tmpdir, "testImg.sif")
 
-	cmdArgs := []string{imgPath, "library://alpine:latest"}
+	cmdArgs := []string{imgPath, "oras://ghcr.io/apptainer/alpine:latest"}
 
 	// Pull the specified image to the temporary location
 	c.env.RunApptainer(

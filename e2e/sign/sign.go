@@ -26,7 +26,7 @@ type ctx struct {
 }
 
 const (
-	imgURL  = "library://sylabs/tests/unsigned:1.0.0"
+	imgURL  = "oras://ghcr.io/apptainer/alpine:3.15."
 	imgName = "testImage.sif"
 )
 

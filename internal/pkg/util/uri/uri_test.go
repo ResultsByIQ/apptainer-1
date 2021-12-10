@@ -44,8 +44,6 @@ func Test_Split(t *testing.T) {
 		{"docker scoped", "docker://user/image", "docker", "//user/image"},
 		{"dave's magical lolcow", "docker://sylabs.io/lolcow", "docker", "//sylabs.io/lolcow"},
 		{"docker with tags", "docker://sylabs.io/lolcow:latest", "docker", "//sylabs.io/lolcow:latest"},
-		{"library basic", "library://image", "library", "//image"},
-		{"library scoped", "library://collection/image", "library", "//collection/image"},
 		{"without transport", "ubuntu", "", "ubuntu"},
 		{"without transport with colon", "ubuntu:18.04.img", "", "ubuntu:18.04.img"},
 	}

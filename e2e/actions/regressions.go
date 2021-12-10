@@ -626,7 +626,7 @@ func (c actionTests) issue5690(t *testing.T) {
 func (c actionTests) invalidRemote(t *testing.T) {
 	testEndpoint := "invalid"
 	testEndpointURI := "https://cloud.example.com"
-	testImage := "library://alpine"
+	testImage := "oras://ghcr.io/apptainer/alpine"
 
 	// Exec library image from the default remote... ensure it succeeds
 	argv := []string{testImage, "/bin/true"}
