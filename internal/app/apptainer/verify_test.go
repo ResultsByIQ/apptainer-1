@@ -273,7 +273,8 @@ func TestVerify(t *testing.T) {
 				wantVerified: [][]uint32{{1, 2}},
 				wantEntity:   e,
 			},
-		*/ {
+		*/
+		{
 			name:         "OptVerifyGroup",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
 			opts:         []VerifyOpt{OptVerifyGroup(1)},
