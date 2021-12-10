@@ -285,7 +285,7 @@ var buildCmd = &cobra.Command{
 }
 
 func preRun(cmd *cobra.Command, args []string) {
-	if buildArgs.fakeroot && !buildArgs.remote {
+	if buildArgs.fakeroot {
 		fakerootExec(args)
 	}
 

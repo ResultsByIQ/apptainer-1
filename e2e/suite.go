@@ -112,9 +112,6 @@ func Run(t *testing.T) {
 	// create an empty plugin directory
 	e2e.SetupPluginDir(t, testenv.TestDir)
 
-	// duplicate system remote.yaml and create a temporary one on top of original
-	e2e.SetupSystemRemoteFile(t, testenv.TestDir)
-
 	// create an empty ECL configuration and empty global keyring
 	e2e.SetupSystemECLAndGlobalKeyRing(t, testenv.TestDir)
 
