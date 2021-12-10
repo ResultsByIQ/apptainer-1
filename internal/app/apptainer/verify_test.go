@@ -235,45 +235,6 @@ func TestVerify(t *testing.T) {
 		wantEntity   *openpgp.Entity
 		wantErr      error
 	}{
-		/*
-			{
-				name:    "SignatureNotFound",
-				path:    filepath.Join("testdata", "images", "one-group.sif"),
-				opts:    []VerifyOpt{},
-				wantErr: &integrity.SignatureNotFoundError{},
-			},
-			{
-				name:    "SignatureNotFoundNonLegacy",
-				path:    filepath.Join("testdata", "images", "one-group-signed.sif"),
-				opts:    []VerifyOpt{OptVerifyLegacy()},
-				wantErr: &integrity.SignatureNotFoundError{},
-			},
-			{
-				name:    "SignatureNotFoundLegacy",
-				path:    filepath.Join("testdata", "images", "one-group-signed-legacy.sif"),
-				opts:    []VerifyOpt{},
-				wantErr: &integrity.SignatureNotFoundError{},
-			},
-			{
-				name:    "SignatureNotFoundLegacyAll",
-				path:    filepath.Join("testdata", "images", "one-group-signed-legacy-all.sif"),
-				opts:    []VerifyOpt{},
-				wantErr: &integrity.SignatureNotFoundError{},
-			},
-			{
-				name:    "SignatureNotFoundLegacyGroup",
-				path:    filepath.Join("testdata", "images", "one-group-signed-legacy-group.sif"),
-				opts:    []VerifyOpt{},
-				wantErr: &integrity.SignatureNotFoundError{},
-			},
-			{
-				name:         "Defaults",
-				path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
-				opts:         []VerifyOpt{},
-				wantVerified: [][]uint32{{1, 2}},
-				wantEntity:   e,
-			},
-		*/
 		{
 			name:         "OptVerifyGroup",
 			path:         filepath.Join("testdata", "images", "one-group-signed.sif"),
