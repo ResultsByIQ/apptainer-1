@@ -4,12 +4,12 @@ go 1.16
 
 require (
 	github.com/Netflix/go-expect v0.0.0-20220104043353-73e0943537d2
-	github.com/ProtonMail/go-crypto v0.0.0-20211112122917-428f8eabeeb3
+	github.com/ProtonMail/go-crypto v0.0.0-20221026131551-cf6655e29de4
 	github.com/adigunhammedolalekan/registry-auth v0.0.0-20200730122110-8cde180a3a60
 	github.com/apex/log v1.9.0
 	github.com/apptainer/container-key-client v0.7.2
 	github.com/apptainer/container-library-client v1.2.2
-	github.com/apptainer/sif/v2 v2.3.1
+	github.com/apptainer/sif/v2 v2.9.0
 	github.com/blang/semver/v4 v4.0.0
 	github.com/buger/jsonparser v1.1.1
 	github.com/cenkalti/backoff/v4 v4.1.2
@@ -20,13 +20,13 @@ require (
 	github.com/containers/image/v5 v5.19.1
 	github.com/creack/pty v1.1.17
 	github.com/cyphar/filepath-securejoin v0.2.3
-	github.com/docker/docker v20.10.12+incompatible
+	github.com/docker/docker v20.10.20+incompatible
 	github.com/fatih/color v1.13.0
 	github.com/go-log/log v0.2.0
 	github.com/google/uuid v1.3.0
 	github.com/moby/sys/mount v0.3.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0
-	github.com/opencontainers/image-spec v1.0.3-0.20211202193544-a5463b7f9c84
+	github.com/opencontainers/image-spec v1.1.0-rc2
 	github.com/opencontainers/runtime-spec v1.0.3-0.20210326190908-1c3f411f0417
 	github.com/opencontainers/runtime-tools v0.9.1-0.20210326182921-59cdde06764b
 	github.com/opencontainers/selinux v1.10.0
@@ -35,7 +35,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/seccomp/containers-golang v0.6.0
 	github.com/seccomp/libseccomp-golang v0.9.2-0.20210429002308-3879420cc921
-	github.com/spf13/cobra v1.3.0
+	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
 	github.com/sylabs/json-resp v0.8.0
 	github.com/urfave/cli v1.22.5 // indirect
@@ -44,8 +44,8 @@ require (
 	github.com/yvasiyarov/go-metrics v0.0.0-20150112132944-c25f46c4b940 // indirect
 	github.com/yvasiyarov/gorelic v0.0.6 // indirect
 	github.com/yvasiyarov/newrelic_platform_go v0.0.0-20160601141957-9c099fbc30e9 // indirect
-	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9
-	golang.org/x/term v0.0.0-20210916214954-140adaaadfaf
+	golang.org/x/sys v0.3.0
+	golang.org/x/term v0.3.0
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.1.0
 	mvdan.cc/sh/v3 v3.4.3-0.20220202175809-113ed667a8a7
