@@ -15,8 +15,8 @@ require (
 	github.com/cenkalti/backoff/v4 v4.1.2
 	github.com/containerd/cgroups v1.0.3
 	github.com/containerd/containerd v1.5.9
-	github.com/containernetworking/cni v1.0.1
-	github.com/containernetworking/plugins v1.0.1
+	github.com/containernetworking/cni v1.1.2
+	github.com/containernetworking/plugins v1.2.0
 	github.com/containers/image/v5 v5.19.1
 	github.com/creack/pty v1.1.17
 	github.com/cyphar/filepath-securejoin v0.2.3
@@ -44,8 +44,8 @@ require (
 	github.com/yvasiyarov/go-metrics v0.0.0-20150112132944-c25f46c4b940 // indirect
 	github.com/yvasiyarov/gorelic v0.0.6 // indirect
 	github.com/yvasiyarov/newrelic_platform_go v0.0.0-20160601141957-9c099fbc30e9 // indirect
-	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9
-	golang.org/x/term v0.0.0-20210916214954-140adaaadfaf
+	golang.org/x/sys v0.4.0
+	golang.org/x/term v0.3.0
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.1.0
 	mvdan.cc/sh/v3 v3.4.3-0.20220202175809-113ed667a8a7
