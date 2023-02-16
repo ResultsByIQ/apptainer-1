@@ -13,10 +13,10 @@ require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/buger/jsonparser v1.1.1
 	github.com/cenkalti/backoff/v4 v4.1.2
-	github.com/containerd/cgroups v1.0.3
-	github.com/containerd/containerd v1.5.9
-	github.com/containernetworking/cni v1.0.1
-	github.com/containernetworking/plugins v1.0.1
+	github.com/containerd/cgroups v1.0.4
+	github.com/containerd/containerd v1.6.18
+	github.com/containernetworking/cni v1.1.1
+	github.com/containernetworking/plugins v1.1.1
 	github.com/containers/image/v5 v5.19.1
 	github.com/creack/pty v1.1.17
 	github.com/cyphar/filepath-securejoin v0.2.3
@@ -29,9 +29,9 @@ require (
 	github.com/opencontainers/image-spec v1.0.3-0.20211202193544-a5463b7f9c84
 	github.com/opencontainers/runtime-spec v1.0.3-0.20210326190908-1c3f411f0417
 	github.com/opencontainers/runtime-tools v0.9.1-0.20210326182921-59cdde06764b
-	github.com/opencontainers/selinux v1.10.0
+	github.com/opencontainers/selinux v1.10.1
 	github.com/opencontainers/umoci v0.4.7
-	github.com/pelletier/go-toml v1.9.4
+	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/errors v0.9.1
 	github.com/seccomp/containers-golang v0.6.0
 	github.com/seccomp/libseccomp-golang v0.9.2-0.20210429002308-3879420cc921
@@ -44,8 +44,8 @@ require (
 	github.com/yvasiyarov/go-metrics v0.0.0-20150112132944-c25f46c4b940 // indirect
 	github.com/yvasiyarov/gorelic v0.0.6 // indirect
 	github.com/yvasiyarov/newrelic_platform_go v0.0.0-20160601141957-9c099fbc30e9 // indirect
-	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9
-	golang.org/x/term v0.0.0-20210916214954-140adaaadfaf
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f
+	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.1.0
 	mvdan.cc/sh/v3 v3.4.3-0.20220202175809-113ed667a8a7
